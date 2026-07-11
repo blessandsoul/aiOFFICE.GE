@@ -1,0 +1,41 @@
+{
+  "_comment": "Brand whitelist for aioffice. The product hue is the brand, not AI slop. Read by .claude/hooks/frontend_design_gate.py via the vendored impeccable detector.",
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "ai-color-palette",
+        "value": "#0d9488",
+        "files": [
+          "src/**"
+        ],
+        "reason": "aioffice brand colour, locked in src/config/site.ts"
+      },
+      {
+        "rule": "ai-color-palette",
+        "value": "#99f6e4",
+        "files": [
+          "src/**"
+        ],
+        "reason": "aioffice brand colour, locked in src/config/site.ts"
+      },
+      {
+        "rule": "ai-color-palette",
+        "value": "#0d9488",
+        "files": [
+          "src/**"
+        ],
+        "reason": "aioffice brand colour, locked in src/config/site.ts"
+      },
+      {
+        "rule": "ai-color-palette",
+        "value": "#2dd4bf",
+        "files": [
+          "src/**"
+        ],
+        "reason": "aioffice brand colour, locked in src/config/site.ts"
+      }
+    ]
+  }
+}

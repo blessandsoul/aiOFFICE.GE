@@ -1,0 +1,154 @@
+'use client';
+
+import { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { motion, useReducedMotion } from 'framer-motion';
+import { SectionContainer } from '@/components/layout/SectionContainer';
+import { cn } from '@/lib/utils';
+
+/* =========================================================================
+   OfficeMap: pick your business, see what we would automate first.
+
+   The owner's real question is not "can AI do this". It is "what would you actually do in MY
+   company, on Monday". So we answer it before he asks, for six kinds of business, and we rank
+   the six processes by what moves money in Georgia rather than by what demos well.
+
+   Each row names what moves. Not a percentage, not an efficiency gain: the order that vanished
+   in a chat thread, the fine you paid last quarter, the empty shelf. Those are the things an
+   owner already lies awake about, and naming them is the whole trick.
+
+   The layout is deliberately a ranked list and not three equal cards, because the ranking is
+   the information. A row of cards would say these are alternatives. They are not: they are an
+   order of operations, and the first one is the only one we want him to buy.
+   ========================================================================= */
+
+const INDUSTRIES = ['i1', 'i2', 'i3', 'i4', 'i5', 'i6'] as const;
+type Industry = (typeof INDUSTRIES)[number];
+
+/* Difficulty per rank position. The first job is always the easy one with the biggest money
+   behind it, because a first automation that fails takes the second one down with it. */
+const DIFFICULTY = ['d1', 'd1', 'd2', 'd2', 'd2', 'd3'] as const;
+
+export function OfficeMap() {
+  const t = useTranslations('product.map');
+  const reduced = useReducedMotion();
+  const [ind, setInd] = useState<Industry>('i1');
+
+  return (
+    <SectionContainer className="py-20 md:py-28">
+      <div className="mx-auto max-w-5xl lg:ml-0">
+        <span className="text-[12px] uppercase tracking-wide text-neutral-900/40">
+          {t('eyebrow')}
+        </span>
+        <h2 className="mt-4 max-w-2xl text-balance font-display text-3xl font-extrabold leading-[1.1] tracking-tight text-neutral-900 md:text-4xl">
+          {t('heading')}
+        </h2>
+        <p className="mt-3 max-w-xl text-pretty text-[15px] leading-relaxed text-[#525252]">
+          {t('subtitle')}
+        </p>
+
+        <div className="mt-8 flex flex-wrap gap-2">
+          {INDUSTRIES.map((i) => {
+            const on = i === ind;
+            return (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setInd(i)}
+                aria-pressed={on}
+                className={cn(
+                  'min-h-[44px] rounded-full px-5 text-[14px] font-medium',
+                  'transition-[transform,background-color,box-shadow,color] duration-150 ease-out',
+                  'active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2',
+                  on
+                    ? 'bg-[var(--brand)] text-white'
+                    : 'bg-[#fafafa] text-[#525252] shadow-[0_0_0_1px_rgba(0,0,0,0.06)] md:hover:bg-[#f0f0f0]',
+                )}
+              >
+                {t(i)}
+              </button>
+            );
+          })}
+        </div>
+
+        <ol className="mt-10 flex flex-col gap-2">
+          {[1, 2, 3, 4, 5, 6].map((n, idx) => {
+            const first = idx === 0;
+            const last = idx >= 4;
+            return (
+              <motion.li
+                key={`${ind}-${n}`}
+                initial={reduced ? false : { opacity: 0, y: 10, filter: 'blur(3px)' }}
+                animate={{ opacity: last ? 0.6 : 1, y: 0, filter: 'blur(0px)' }}
+                transition={{
+                  delay: reduced ? 0 : idx * 0.055,
+                  duration: 0.3,
+                  ease: [0.23, 1, 0.32, 1],
+                }}
+                className={cn(
+                  'grid grid-cols-[auto_1fr] items-start gap-x-4 gap-y-1 rounded-2xl px-5 py-4 md:grid-cols-[auto_1.4fr_1fr_auto] md:items-center',
+                  first
+                    ? 'bg-[color-mix(in_srgb,var(--brand)_11%,white)] shadow-[0_0_0_1px_var(--brand)]'
+                    : 'bg-[#fafafa] shadow-[0_0_0_1px_rgba(0,0,0,0.05)]',
+                )}
+              >
+                <span
+                  className={cn(
+                    'flex h-7 w-7 items-center justify-center rounded-full text-[12px] font-bold tabular-nums',
+                    first ? 'text-white' : 'bg-white text-neutral-900/40 shadow-[0_0_0_1px_rgba(0,0,0,0.07)]',
+                  )}
+                  style={first ? { background: 'var(--brand)' } : undefined}
+                >
+                  {n}
+                </span>
+
+                <span className="min-w-0">
+                  <span className="block text-pretty text-[15px] font-semibold leading-snug text-neutral-900">
+                    {t(`${ind}p${n}`)}
+                  </span>
+                  {first && (
+                    <span className="mt-1 inline-block text-[11px] font-bold uppercase tracking-wide text-[var(--brand)]">
+                      {t('first')}
+                    </span>
+                  )}
+                  {idx === 1 && (
+                    <span className="mt-1 inline-block text-[11px] uppercase tracking-wide text-neutral-900/35">
+                      {t('then')}
+                    </span>
+                  )}
+                  {idx === 4 && (
+                    <span className="mt-1 inline-block text-[11px] uppercase tracking-wide text-neutral-900/35">
+                      {t('later')}
+                    </span>
+                  )}
+                </span>
+
+                <span className="col-span-2 md:col-span-1 md:col-start-3">
+                  <span className="block text-[11px] uppercase tracking-wide text-neutral-900/35">
+                    {t('moves')}
+                  </span>
+                  <span className="mt-0.5 block text-pretty text-[13px] leading-snug text-[#525252]">
+                    {t(`${ind}p${n}m`)}
+                  </span>
+                </span>
+
+                <span className="col-span-2 md:col-span-1 md:col-start-4 md:justify-self-end">
+                  <span
+                    className={cn(
+                      'inline-block whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-semibold',
+                      DIFFICULTY[idx] === 'd1' && 'bg-[#10b981]/12 text-[#065f46]',
+                      DIFFICULTY[idx] === 'd2' && 'bg-[#f59e0b]/14 text-[#92400e]',
+                      DIFFICULTY[idx] === 'd3' && 'bg-neutral-900/8 text-neutral-900/55',
+                    )}
+                  >
+                    {t(DIFFICULTY[idx])}
+                  </span>
+                </span>
+              </motion.li>
+            );
+          })}
+        </ol>
+      </div>
+    </SectionContainer>
+  );
+}

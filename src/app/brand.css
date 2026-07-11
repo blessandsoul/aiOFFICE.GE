@@ -1,0 +1,27 @@
+/* Per-site brand tokens. GENERATED from src/config/site.ts by `python scripts/landings.py new`.
+   Never synced between landings, and never hand-edited: change src/config/site.ts and re-scaffold.
+
+   Imported LAST in src/app/[locale]/layout.tsx (after globals.css and site-new.css), so these
+   :root values win over the base tokens at equal specificity. Keep it last.
+
+   Two things here are COMPUTED, not chosen, because eyeballing them is how contrast bugs ship:
+
+   --primary-foreground  the label colour, from the brand's WCAG relative luminance. A light
+                         brand fill (aiAPP's lime) needs near-black text or the label fails AA.
+   --brand-cta           the button fill: this brand, darkened only as far as the label needs to
+                         clear 4.5:1. --brand itself stays vivid for every other surface. */
+
+:root {
+  --primary: #0d9488;
+  --primary-foreground: #ffffff;
+  --accent: #2dd4bf;
+  --accent-foreground: #0a0a0a;
+  --ring: #0d9488;
+  --brand: #0d9488;
+  --brand-soft: #99f6e4;
+
+  /* the label #ffffff on #0d9488 is 3.74:1 (AA wants 4.5),
+     on #0b8278 it is 4.69:1 */
+  --brand-cta: #0b8278;
+  --accent-cta: #1c8376;
+}
