@@ -165,6 +165,20 @@
       "human": "Human approval",
       "note": "The approval step is not a limitation we are apologising for. It is the design, and it is why this is safe to put near your tax filings."
     },
+    "exceptionGuard": {
+      "eyebrow": "When the input is unclear",
+      "heading": "It stops instead of guessing.",
+      "subtitle": "A poor photo hides the quantity. aiOFFICE holds the order until a person confirms 12, then resumes with that exact correction.",
+      "poorPhoto": "Poor-quality photo",
+      "quantity": "Quantity",
+      "uncertain": "Uncertain — not entered",
+      "held": "Order held",
+      "humanCheck": "Human check",
+      "corrected": "Corrected to 12",
+      "resumed": "Processing resumed",
+      "outcome": "A person confirmed the quantity — processing resumed",
+      "replay": "Replay"
+    },
     "leak": {
       "eyebrow": "Your numbers, not an American calculator",
       "heading": "What is the paperwork actually costing you?",
@@ -180,6 +194,23 @@
       "total": "Leaking, every month",
       "perMonth": "GEL",
       "note": "Your inputs, your arithmetic. We supplied no percentage and no benchmark. If the number comes out small, then there is nothing here worth buying, and you have just saved yourself a meeting."
+    },
+    "reconciliationGuard": {
+      "eyebrow": "Before dispatch",
+      "heading": "Four records must tell the same story.",
+      "subtitle": "The order, inventory and waybill show 12. Accounting shows 10, so dispatch stays blocked until the record is corrected.",
+      "order": "Order",
+      "inventory": "Inventory",
+      "waybill": "Waybill",
+      "accounting": "Accounting",
+      "checking": "Checking records",
+      "match": "Match",
+      "mismatch": "Mismatch",
+      "blocked": "Dispatch blocked",
+      "correcting": "Correcting accounting",
+      "readyToShip": "Ready to ship",
+      "outcome": "All four records match — ready to ship",
+      "replay": "Replay"
     },
     "map": {
       "eyebrow": "Where we would start",
