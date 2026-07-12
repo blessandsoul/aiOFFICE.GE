@@ -27,8 +27,8 @@ function observerHarness() {
 
   return {
     FakeIntersectionObserver,
-    emit(isIntersecting) {
-      callback([{ isIntersecting }]);
+    emit(isIntersecting, intersectionRatio = isIntersecting ? 1 : 0) {
+      callback([{ isIntersecting, intersectionRatio }]);
     },
     snapshot() {
       return { disconnectCount, observedTarget, options };
@@ -58,6 +58,30 @@ test('normal motion stays idle below fold and plays once on first visibility', (
 
   harness.emit(true);
   harness.emit(true);
+  assert.equal(playCount, 1);
+  assert.equal(harness.snapshot().disconnectCount, 1);
+
+  cleanup();
+});
+
+test('normal motion requires the configured intersection ratio before playing', () => {
+  const harness = observerHarness();
+  let playCount = 0;
+
+  const cleanup = createVisibilityGate({
+    target: { id: 'threshold-demo-box' },
+    play: () => {
+      playCount += 1;
+    },
+    Observer: harness.FakeIntersectionObserver,
+  });
+
+  harness.emit(true, 0.34);
+  assert.equal(playCount, 0);
+  assert.equal(harness.snapshot().disconnectCount, 0);
+
+  harness.emit(true, 0.35);
+  harness.emit(true, 1);
   assert.equal(playCount, 1);
   assert.equal(harness.snapshot().disconnectCount, 1);
 
@@ -137,6 +161,23 @@ test('reduced motion emits the final timeline immediately without observing', ()
   assert.equal(playCount, 1);
   assert.equal(observerConstructed, false);
   cleanup();
+});
+
+test('missing IntersectionObserver falls back to one immediate play', () => {
+  let playCount = 0;
+
+  const cleanup = createVisibilityGate({
+    target: { id: 'fallback-demo-box' },
+    play: () => {
+      playCount += 1;
+    },
+    Observer: undefined,
+  });
+
+  assert.equal(playCount, 1);
+  cleanup();
+  cleanup();
+  assert.equal(playCount, 1);
 });
 
 test('both office demos wire the gate to a real rendered box', () => {

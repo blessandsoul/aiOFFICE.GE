@@ -28,7 +28,8 @@ export function createVisibilityGate({
   } else {
     observer = new Observer(
       ([entry]) => {
-        if (hasPlayed || !entry?.isIntersecting) return;
+        const meetsThreshold = (entry?.intersectionRatio ?? 0) >= threshold;
+        if (hasPlayed || !entry?.isIntersecting || !meetsThreshold) return;
         playOnce();
         observer?.disconnect();
         observer = null;
