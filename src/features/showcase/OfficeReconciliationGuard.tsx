@@ -10,6 +10,7 @@ import {
   createTimelinePlayer,
   reconciliationFrame,
 } from './office-demo-models.mjs';
+import { createVisibilityGate } from './office-demo-visibility.mjs';
 
 type TimelinePlayer = {
   replay: () => void;
@@ -23,6 +24,7 @@ export function OfficeReconciliationGuard() {
   const reduced = Boolean(useReducedMotion());
   const [stage, setStage] = useState(RECONCILIATION_STAGES[0]);
   const playerRef = useRef<TimelinePlayer | null>(null);
+  const visibilityRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const player = createTimelinePlayer({
@@ -32,9 +34,14 @@ export function OfficeReconciliationGuard() {
     });
 
     playerRef.current = player;
-    player.play();
+    const cleanupVisibility = createVisibilityGate({
+      target: visibilityRef.current,
+      play: player.play,
+      reducedMotion: reduced,
+    });
 
     return () => {
+      cleanupVisibility();
       player.cancel();
       if (playerRef.current === player) playerRef.current = null;
     };
@@ -55,7 +62,10 @@ export function OfficeReconciliationGuard() {
 
   return (
     <SectionContainer className="py-20 md:py-28">
-      <div className="grid gap-10 lg:grid-cols-[1fr_minmax(300px,420px)] lg:gap-14">
+      <div
+        ref={visibilityRef}
+        className="grid gap-10 lg:grid-cols-[1fr_minmax(300px,420px)] lg:gap-14"
+      >
         <div className="order-2 lg:order-1">
           <div className="rounded-[28px] bg-[#fafafa] p-3 shadow-[0_0_0_1px_rgba(0,0,0,0.06)] sm:p-5">
             <div className="grid gap-2.5 sm:grid-cols-2">

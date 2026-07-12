@@ -10,6 +10,7 @@ import {
   createTimelinePlayer,
   exceptionFrame,
 } from './office-demo-models.mjs';
+import { createVisibilityGate } from './office-demo-visibility.mjs';
 
 type TimelinePlayer = {
   replay: () => void;
@@ -23,6 +24,7 @@ export function OfficeExceptionGuard() {
   const reduced = Boolean(useReducedMotion());
   const [stage, setStage] = useState(EXCEPTION_STAGES[0]);
   const playerRef = useRef<TimelinePlayer | null>(null);
+  const visibilityRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const player = createTimelinePlayer({
@@ -32,9 +34,14 @@ export function OfficeExceptionGuard() {
     });
 
     playerRef.current = player;
-    player.play();
+    const cleanupVisibility = createVisibilityGate({
+      target: visibilityRef.current,
+      play: player.play,
+      reducedMotion: reduced,
+    });
 
     return () => {
+      cleanupVisibility();
       player.cancel();
       if (playerRef.current === player) playerRef.current = null;
     };
@@ -47,7 +54,10 @@ export function OfficeExceptionGuard() {
 
   return (
     <SectionContainer className="py-20 md:py-28">
-      <div className="grid gap-10 lg:grid-cols-[minmax(280px,380px)_1fr] lg:gap-14">
+      <div
+        ref={visibilityRef}
+        className="grid gap-10 lg:grid-cols-[minmax(280px,380px)_1fr] lg:gap-14"
+      >
         <div>
           <span className="text-[12px] uppercase tracking-wide text-neutral-900/40">
             {t('eyebrow')}
