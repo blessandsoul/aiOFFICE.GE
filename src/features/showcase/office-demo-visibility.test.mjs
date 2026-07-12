@@ -83,6 +83,38 @@ test('cleanup before visibility prevents a later observer callback from playing'
   assert.equal(harness.snapshot().disconnectCount, 1);
 });
 
+test('Strict Mode-like setup and idempotent cleanup isolate stale observers', () => {
+  const firstHarness = observerHarness();
+  const secondHarness = observerHarness();
+  const plays = [];
+
+  const cleanupFirst = createVisibilityGate({
+    target: { id: 'first-mounted-box' },
+    play: () => plays.push('first'),
+    Observer: firstHarness.FakeIntersectionObserver,
+  });
+
+  cleanupFirst();
+  cleanupFirst();
+
+  const cleanupSecond = createVisibilityGate({
+    target: { id: 'second-mounted-box' },
+    play: () => plays.push('second'),
+    Observer: secondHarness.FakeIntersectionObserver,
+  });
+
+  firstHarness.emit(true);
+  secondHarness.emit(true);
+
+  assert.deepEqual(plays, ['second']);
+  assert.equal(firstHarness.snapshot().disconnectCount, 1);
+  assert.equal(secondHarness.snapshot().disconnectCount, 1);
+
+  cleanupSecond();
+  cleanupSecond();
+  assert.equal(secondHarness.snapshot().disconnectCount, 1);
+});
+
 test('reduced motion emits the final timeline immediately without observing', () => {
   let observerConstructed = false;
   let playCount = 0;
