@@ -4,6 +4,16 @@ import test from 'node:test';
 
 import * as lifecycle from './office-demo-visibility.mjs';
 
+const SHOWCASE_COMPONENTS = [
+  'OfficeFlow.tsx',
+  'OfficeExceptionGuard.tsx',
+  'OfficeLeak.tsx',
+  'OfficeReconciliationGuard.tsx',
+  'OfficeMap.tsx',
+  'HeroProof.tsx',
+];
+const RAW_STATUS_GLYPH = /(?:['"][—–?✓✔✕→←]['"]|>\s*[—–?✓✔✕→←]\s*<)/u;
+
 function createObserverHarness() {
   const instances = [];
 
@@ -160,15 +170,21 @@ test('manual control cancels automatic repetition without resetting visitor inpu
   assert.deepEqual(harness.calls, ['play', 'stop', 'stop']);
 });
 
+test('explicit replay releases manual ownership and restarts the visible loop', () => {
+  const harness = createHarness();
+  const observed = harness.observer.instances[0];
+
+  observed.emit(harness.target, 0.8);
+  harness.controller.takeControl();
+  harness.controller.replay();
+
+  assert.deepEqual(harness.calls, ['play', 'stop', 'stop', 'reset', 'play']);
+  assert.equal(harness.timers.pending().length, 1);
+  assert.equal(harness.timers.pending()[0][1].delay, 9000);
+});
+
 test('all office stories use the shared visible loop and expose replay', () => {
-  for (const component of [
-    'OfficeFlow.tsx',
-    'OfficeExceptionGuard.tsx',
-    'OfficeLeak.tsx',
-    'OfficeReconciliationGuard.tsx',
-    'OfficeMap.tsx',
-    'HeroProof.tsx',
-  ]) {
+  for (const component of SHOWCASE_COMPONENTS) {
     const source = readFileSync(new URL(component, import.meta.url), 'utf8');
 
     assert.match(source, /createOfficeDemoLoop/u, `${component} must use the shared office loop`);
@@ -177,9 +193,31 @@ test('all office stories use the shared visible loop and expose replay', () => {
   }
 });
 
-test('manual leak and map stories permanently yield to visitor input', () => {
+test('all office stories use bundled icons instead of raw visitor status glyphs', () => {
+  for (const component of SHOWCASE_COMPONENTS) {
+    const source = readFileSync(new URL(component, import.meta.url), 'utf8');
+    assert.doesNotMatch(source, RAW_STATUS_GLYPH, `${component} contains a raw status glyph`);
+    assert.doesNotMatch(source, /from ['"]lucide-react['"]/u);
+  }
+
+  const exceptionSource = readFileSync(
+    new URL('OfficeExceptionGuard.tsx', import.meta.url),
+    'utf8',
+  );
+  assert.match(exceptionSource, /import \{ Ico \} from '@\/components\/common\/Ico';/u);
+  assert.match(exceptionSource, /<Ico/u);
+});
+
+test('manual leak and map stories yield until an enabled explicit replay', () => {
   for (const component of ['OfficeLeak.tsx', 'OfficeMap.tsx']) {
     const source = readFileSync(new URL(component, import.meta.url), 'utf8');
     assert.match(source, /\.takeControl\(\)/u, `${component} must yield to manual input`);
+    assert.doesNotMatch(source, /disabled=\{manual\}/u);
+    assert.match(source, /onClick=\{replayDemo\}/u);
+    assert.match(
+      source,
+      /const replayDemo = \(\) => \{[\s\S]*?manualRef\.current = false;[\s\S]*?setManual\(false\);[\s\S]*?controllerRef\.current\?\.replay\(\);[\s\S]*?\};/u,
+      `${component} must release manual ownership before replay`,
+    );
   }
 });

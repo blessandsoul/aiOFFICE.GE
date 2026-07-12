@@ -81,6 +81,12 @@ export function OfficeLeak() {
     setter(value);
   };
 
+  const replayDemo = () => {
+    manualRef.current = false;
+    setManual(false);
+    controllerRef.current?.replay();
+  };
+
   const perMonth = orders * 30;
   const messy = perMonth * (viber / 100);
   const retyped = messy * (retype / 100);
@@ -110,9 +116,9 @@ export function OfficeLeak() {
 
           <button
             type="button"
-            onClick={() => controllerRef.current?.replay()}
-            disabled={manual}
-            className="mt-5 min-h-[44px] rounded-xl bg-neutral-900 px-5 text-[13px] font-bold text-white transition-transform active:scale-[0.97] disabled:cursor-default disabled:opacity-45 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2"
+            onClick={replayDemo}
+            data-manual={manual ? 'true' : 'false'}
+            className="mt-5 min-h-[44px] rounded-xl bg-neutral-900 px-5 text-[13px] font-bold text-white transition-transform active:scale-[0.97] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2"
           >
             {actions('again')}
           </button>

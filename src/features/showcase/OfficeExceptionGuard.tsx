@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
+import { Ico } from '@/components/common/Ico';
 import { SectionContainer } from '@/components/layout/SectionContainer';
 import { cn } from '@/lib/utils';
 import {
@@ -109,9 +110,23 @@ export function OfficeExceptionGuard() {
                     initial={reduced ? false : { opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: reduced ? 0 : 0.24 }}
-                    className="mt-1 font-display text-5xl font-extrabold tabular-nums text-neutral-900"
+                    className="mt-1 flex min-h-12 items-center font-display text-5xl font-extrabold tabular-nums text-neutral-900"
                   >
-                    {hasHumanValue ? frame.quantity : stage === 'uncertain' ? '?' : '—'}
+                    {hasHumanValue ? (
+                      frame.quantity
+                    ) : (
+                      <Ico
+                        name={
+                          stage === 'uncertain'
+                            ? 'solar:close-circle-bold-duotone'
+                            : 'solar:clock-circle-bold-duotone'
+                        }
+                        className={cn(
+                          'h-10 w-10',
+                          stage === 'uncertain' ? 'text-[#d97706]' : 'text-neutral-900/25',
+                        )}
+                      />
+                    )}
                   </motion.p>
                 </div>
                 <span
