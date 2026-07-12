@@ -31,10 +31,10 @@
     "legal": "Zemo Plato, III Array, N14, Apt. 87, Tbilisi 0163"
   },
   "landingNav": {
-    "showcase": "Watch an order run itself",
+    "showcase": "See the workflow",
     "process": "How it works",
     "faq": "Questions",
-    "cta": "Get in touch"
+    "cta": "Fix a process"
   },
   "landingFooter": {
     "company": "AI NOW LLC, Tbilisi, Georgia",
@@ -43,10 +43,10 @@
     "socialHeading": "Social",
     "languageHeading": "Language",
     "contact": "Contact",
-    "sectionShowcase": "Watch an order run itself",
+    "sectionShowcase": "See the workflow",
     "sectionWork": "How it works",
     "sectionFaq": "Questions",
-    "ctaHuge": "Show us the process that hurts",
+    "ctaHuge": "Show us the process",
     "copyright": "© {year} aiOFFICE, an aiNOW product. All rights reserved."
   },
   "product": {
@@ -60,17 +60,12 @@
       "taglineWorks": "runs it",
       "typewriterWords": "orders,waybills,invoices,approvals,reports",
       "typewriterPrefill": "orders",
-      "sloganCreates": "creates",
-      "sloganAds": "advertises",
-      "sloganSells": "sells",
-      "sloganManages": "manages",
-      "sloganTogether": "together",
       "ctaResults": "Watch an order run itself",
       "ctaCall": "Book a call",
       "commitment": "We name one number in writing before we start. If it has not moved 30 days after launch, we keep working at no charge until it does.",
       "audience": "For distribution, retail chains, logistics, clinics and construction. 5 to 50 people.",
       "sub": "A Viber message at twenty to midnight becomes an order, an RS.ge waybill, an invoice and a confirmation. A human approves the one step that touches money.",
-      "signedBy": "Andrew Altair. I am the one who stands on your floor."
+      "signedBy": "aiNOW checks this process on your data, sets it up, and shows you the result."
     },
     "work": {
       "eyebrow": "How it works",
