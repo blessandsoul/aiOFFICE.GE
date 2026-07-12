@@ -10,11 +10,11 @@ import {
   createTimelinePlayer,
   exceptionFrame,
 } from './office-demo-models.mjs';
-import { createVisibilityGate } from './office-demo-visibility.mjs';
+import { createOfficeDemoLoop } from './office-demo-visibility.mjs';
 
-type TimelinePlayer = {
+type DemoController = {
   replay: () => void;
-  cancel: () => void;
+  cleanup: () => void;
 };
 
 const STAGE_LABELS = ['poorPhoto', 'uncertain', 'humanCheck', 'resumed'] as const;
@@ -23,27 +23,30 @@ export function OfficeExceptionGuard() {
   const t = useTranslations('product.exceptionGuard');
   const reduced = Boolean(useReducedMotion());
   const [stage, setStage] = useState(EXCEPTION_STAGES[0]);
-  const playerRef = useRef<TimelinePlayer | null>(null);
+  const controllerRef = useRef<DemoController | null>(null);
   const visibilityRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const player = createTimelinePlayer({
       stages: EXCEPTION_STAGES,
       onStage: setStage,
-      reducedMotion: reduced,
     });
 
-    playerRef.current = player;
-    const cleanupVisibility = createVisibilityGate({
+    const controller = createOfficeDemoLoop({
       target: visibilityRef.current,
       play: player.play,
+      showFinal: () => setStage(EXCEPTION_STAGES[EXCEPTION_STAGES.length - 1]),
+      reset: () => setStage(EXCEPTION_STAGES[0]),
+      stop: player.cancel,
+      cycleMs: 7200,
       reducedMotion: reduced,
     });
+    controllerRef.current = controller;
 
     return () => {
-      cleanupVisibility();
+      controller.cleanup();
       player.cancel();
-      if (playerRef.current === player) playerRef.current = null;
+      if (controllerRef.current === controller) controllerRef.current = null;
     };
   }, [reduced]);
 
@@ -59,7 +62,7 @@ export function OfficeExceptionGuard() {
         className="grid gap-10 lg:grid-cols-[minmax(280px,380px)_1fr] lg:gap-14"
       >
         <div>
-          <span className="text-[12px] uppercase tracking-wide text-neutral-900/40">
+          <span className="text-[12px] font-semibold tracking-wide text-neutral-900/40">
             {t('eyebrow')}
           </span>
           <h2 className="mt-4 text-balance font-display text-3xl font-extrabold leading-[1.1] tracking-tight text-neutral-900 md:text-4xl">
@@ -70,10 +73,10 @@ export function OfficeExceptionGuard() {
           </p>
         </div>
 
-        <div className="overflow-hidden rounded-[28px] bg-[#0e0e11] p-3 shadow-[0_24px_70px_rgba(14,14,17,0.12)] sm:p-5">
+        <div className="overflow-hidden rounded-3xl bg-[#0e0e11] p-3 shadow-[0_24px_70px_rgba(14,14,17,0.12)] sm:p-5">
           <div className="grid gap-3 md:grid-cols-[minmax(180px,0.8fr)_1.2fr]">
             <div className="rounded-2xl bg-white/[0.06] p-3">
-              <span className="text-[11px] uppercase tracking-wide text-white/45">
+              <span className="text-[11px] font-semibold tracking-wide text-white/45">
                 {t('poorPhoto')}
               </span>
               <div
@@ -98,7 +101,7 @@ export function OfficeExceptionGuard() {
             <div className="flex min-w-0 flex-col rounded-2xl bg-white p-4 sm:p-5">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <span className="text-[11px] uppercase tracking-wide text-neutral-900/40">
+                  <span className="text-[11px] font-semibold tracking-wide text-neutral-900/40">
                     {t('quantity')}
                   </span>
                   <motion.p
@@ -113,7 +116,7 @@ export function OfficeExceptionGuard() {
                 </div>
                 <span
                   className={cn(
-                    'rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide',
+                    'rounded-full px-2.5 py-1 text-[10px] font-bold tracking-wide',
                     isDone
                       ? 'bg-[#10b981]/12 text-[#065f46]'
                       : 'bg-[#f59e0b]/15 text-[#92400e]',
@@ -124,7 +127,7 @@ export function OfficeExceptionGuard() {
               </div>
 
               <div className="mt-4 min-h-12 rounded-xl bg-[#fafafa] px-3 py-2.5 shadow-[0_0_0_1px_rgba(0,0,0,0.06)]">
-                <span className="block text-[11px] uppercase tracking-wide text-neutral-900/40">
+                <span className="block text-[11px] font-semibold tracking-wide text-neutral-900/40">
                   {hasHumanValue ? t('humanCheck') : t('uncertain')}
                 </span>
                 {hasHumanValue && (
@@ -166,8 +169,8 @@ export function OfficeExceptionGuard() {
                 </p>
                 <button
                   type="button"
-                  onClick={() => playerRef.current?.replay()}
-                  className="min-h-[44px] shrink-0 rounded-full bg-neutral-900 px-5 text-[13px] font-bold text-white transition-transform active:scale-[0.96] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2"
+                  onClick={() => controllerRef.current?.replay()}
+                  className="min-h-[44px] shrink-0 rounded-xl bg-neutral-900 px-5 text-[13px] font-bold text-white transition-transform active:scale-[0.96] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2"
                 >
                   {t('replay')}
                 </button>

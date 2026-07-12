@@ -10,11 +10,11 @@ import {
   createTimelinePlayer,
   reconciliationFrame,
 } from './office-demo-models.mjs';
-import { createVisibilityGate } from './office-demo-visibility.mjs';
+import { createOfficeDemoLoop } from './office-demo-visibility.mjs';
 
-type TimelinePlayer = {
+type DemoController = {
   replay: () => void;
-  cancel: () => void;
+  cleanup: () => void;
 };
 
 const RECORDS = ['order', 'inventory', 'waybill', 'accounting'] as const;
@@ -23,27 +23,30 @@ export function OfficeReconciliationGuard() {
   const t = useTranslations('product.reconciliationGuard');
   const reduced = Boolean(useReducedMotion());
   const [stage, setStage] = useState(RECONCILIATION_STAGES[0]);
-  const playerRef = useRef<TimelinePlayer | null>(null);
+  const controllerRef = useRef<DemoController | null>(null);
   const visibilityRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const player = createTimelinePlayer({
       stages: RECONCILIATION_STAGES,
       onStage: setStage,
-      reducedMotion: reduced,
     });
 
-    playerRef.current = player;
-    const cleanupVisibility = createVisibilityGate({
+    const controller = createOfficeDemoLoop({
       target: visibilityRef.current,
       play: player.play,
+      showFinal: () => setStage(RECONCILIATION_STAGES[RECONCILIATION_STAGES.length - 1]),
+      reset: () => setStage(RECONCILIATION_STAGES[0]),
+      stop: player.cancel,
+      cycleMs: 7200,
       reducedMotion: reduced,
     });
+    controllerRef.current = controller;
 
     return () => {
-      cleanupVisibility();
+      controller.cleanup();
       player.cancel();
-      if (playerRef.current === player) playerRef.current = null;
+      if (controllerRef.current === controller) controllerRef.current = null;
     };
   }, [reduced]);
 
@@ -67,7 +70,7 @@ export function OfficeReconciliationGuard() {
         className="grid gap-10 lg:grid-cols-[1fr_minmax(300px,420px)] lg:gap-14"
       >
         <div className="order-2 lg:order-1">
-          <div className="rounded-[28px] bg-[#fafafa] p-3 shadow-[0_0_0_1px_rgba(0,0,0,0.06)] sm:p-5">
+          <div className="rounded-3xl bg-[#fafafa] p-3 shadow-[0_0_0_1px_rgba(0,0,0,0.06)] sm:p-5">
             <div className="grid gap-2.5 sm:grid-cols-2">
               {RECORDS.map((record) => {
                 const mismatch = frame.mismatch === record && isBlocked;
@@ -88,18 +91,18 @@ export function OfficeReconciliationGuard() {
                     )}
                   >
                     <span className="flex items-center justify-between gap-3">
-                      <span className="text-[11px] uppercase tracking-wide text-neutral-900/45">
+                      <span className="text-[11px] font-semibold tracking-wide text-neutral-900/45">
                         {t(record)}
                       </span>
                       {mismatch && (
-                        <span className="rounded-full bg-[#dc2626]/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#991b1b]">
+                        <span className="rounded-full bg-[#dc2626]/10 px-2 py-0.5 text-[10px] font-bold tracking-wide text-[#991b1b]">
                           {t('mismatch')}
                         </span>
                       )}
                       {(matched || correcting) && (
                         <span
                           className={cn(
-                            'rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide',
+                            'rounded-full px-2 py-0.5 text-[10px] font-bold tracking-wide',
                             correcting
                               ? 'bg-[#f59e0b]/15 text-[#92400e]'
                               : 'bg-[#10b981]/12 text-[#065f46]',
@@ -125,7 +128,7 @@ export function OfficeReconciliationGuard() {
               )}
             >
               <div aria-live="polite">
-                <span className="block text-[11px] uppercase tracking-wide text-white/45">
+                <span className="block text-[11px] font-semibold tracking-wide text-white/45">
                   {isReady ? t('outcome') : statusLabel}
                 </span>
                 <span className="mt-1 block text-[15px] font-bold">
@@ -134,8 +137,8 @@ export function OfficeReconciliationGuard() {
               </div>
               <button
                 type="button"
-                onClick={() => playerRef.current?.replay()}
-                className="min-h-[44px] shrink-0 rounded-full bg-white px-5 text-[13px] font-bold text-neutral-900 transition-transform active:scale-[0.96] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900"
+                onClick={() => controllerRef.current?.replay()}
+                className="min-h-[44px] shrink-0 rounded-xl bg-white px-5 text-[13px] font-bold text-neutral-900 transition-transform active:scale-[0.96] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900"
               >
                 {t('replay')}
               </button>
@@ -144,7 +147,7 @@ export function OfficeReconciliationGuard() {
         </div>
 
         <div className="order-1 lg:order-2">
-          <span className="text-[12px] uppercase tracking-wide text-neutral-900/40">
+          <span className="text-[12px] font-semibold tracking-wide text-neutral-900/40">
             {t('eyebrow')}
           </span>
           <h2 className="mt-4 text-balance font-display text-3xl font-extrabold leading-[1.1] tracking-tight text-neutral-900 md:text-4xl">

@@ -1,43 +1,76 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { motion, useReducedMotion } from 'framer-motion';
 import { SectionContainer } from '@/components/layout/SectionContainer';
 import { cn } from '@/lib/utils';
-
-/* =========================================================================
-   OfficeMap: pick your business, see what we would automate first.
-
-   The owner's real question is not "can AI do this". It is "what would you actually do in MY
-   company, on Monday". So we answer it before he asks, for six kinds of business, and we rank
-   the six processes by what moves money in Georgia rather than by what demos well.
-
-   Each row names what moves. Not a percentage, not an efficiency gain: the order that vanished
-   in a chat thread, the fine you paid last quarter, the empty shelf. Those are the things an
-   owner already lies awake about, and naming them is the whole trick.
-
-   The layout is deliberately a ranked list and not three equal cards, because the ranking is
-   the information. A row of cards would say these are alternatives. They are not: they are an
-   order of operations, and the first one is the only one we want him to buy.
-   ========================================================================= */
+import { createTimelinePlayer } from './office-demo-models.mjs';
+import { createOfficeDemoLoop } from './office-demo-visibility.mjs';
 
 const INDUSTRIES = ['i1', 'i2', 'i3', 'i4', 'i5', 'i6'] as const;
 type Industry = (typeof INDUSTRIES)[number];
 
-/* Difficulty per rank position. The first job is always the easy one with the biggest money
-   behind it, because a first automation that fails takes the second one down with it. */
+type DemoController = {
+  replay: () => void;
+  takeControl: () => void;
+  cleanup: () => void;
+};
+
+const MAP_CYCLE_MS = 7000;
+
 const DIFFICULTY = ['d1', 'd1', 'd2', 'd2', 'd2', 'd3'] as const;
 
 export function OfficeMap() {
   const t = useTranslations('product.map');
-  const reduced = useReducedMotion();
+  const actions = useTranslations('product.flow');
+  const reduced = Boolean(useReducedMotion());
   const [ind, setInd] = useState<Industry>('i1');
+  const [manual, setManual] = useState(false);
+  const manualRef = useRef(false);
+  const visibilityRef = useRef<HTMLDivElement>(null);
+  const controllerRef = useRef<DemoController | null>(null);
+
+  useEffect(() => {
+    const applyIndustry = (industry: Industry) => {
+      if (!manualRef.current) setInd(industry);
+    };
+    const player = createTimelinePlayer({
+      stages: INDUSTRIES,
+      onStage: applyIndustry,
+      durationMs: MAP_CYCLE_MS,
+    });
+    const controller = createOfficeDemoLoop({
+      target: visibilityRef.current,
+      reducedMotion: reduced,
+      cycleMs: MAP_CYCLE_MS,
+      play: player.play,
+      showFinal: () => applyIndustry(INDUSTRIES[INDUSTRIES.length - 1]),
+      reset: () => applyIndustry(INDUSTRIES[0]),
+      stop: player.cancel,
+    });
+
+    controllerRef.current = controller;
+    return () => {
+      controller.cleanup();
+      player.cancel();
+      if (controllerRef.current === controller) controllerRef.current = null;
+    };
+  }, [reduced]);
+
+  const selectIndustry = (industry: Industry) => {
+    if (!manualRef.current) {
+      manualRef.current = true;
+      setManual(true);
+      controllerRef.current?.takeControl();
+    }
+    setInd(industry);
+  };
 
   return (
     <SectionContainer className="py-20 md:py-28">
-      <div className="mx-auto max-w-5xl lg:ml-0">
-        <span className="text-[12px] uppercase tracking-wide text-neutral-900/40">
+      <div ref={visibilityRef} className="mx-auto max-w-5xl lg:ml-0">
+        <span className="text-[12px] font-semibold tracking-wide text-neutral-900/40">
           {t('eyebrow')}
         </span>
         <h2 className="mt-4 max-w-2xl text-balance font-display text-3xl font-extrabold leading-[1.1] tracking-tight text-neutral-900 md:text-4xl">
@@ -47,6 +80,15 @@ export function OfficeMap() {
           {t('subtitle')}
         </p>
 
+        <button
+          type="button"
+          onClick={() => controllerRef.current?.replay()}
+          disabled={manual}
+          className="mt-5 min-h-[44px] rounded-xl bg-neutral-900 px-5 text-[13px] font-bold text-white transition-transform active:scale-[0.97] disabled:cursor-default disabled:opacity-45 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2"
+        >
+          {actions('again')}
+        </button>
+
         <div className="mt-8 flex flex-wrap gap-2">
           {INDUSTRIES.map((i) => {
             const on = i === ind;
@@ -54,7 +96,7 @@ export function OfficeMap() {
               <button
                 key={i}
                 type="button"
-                onClick={() => setInd(i)}
+                onClick={() => selectIndustry(i)}
                 aria-pressed={on}
                 className={cn(
                   'min-h-[44px] rounded-full px-5 text-[14px] font-medium',
@@ -107,24 +149,24 @@ export function OfficeMap() {
                     {t(`${ind}p${n}`)}
                   </span>
                   {first && (
-                    <span className="mt-1 inline-block text-[11px] font-bold uppercase tracking-wide text-[var(--brand)]">
+                    <span className="mt-1 inline-block text-[11px] font-bold tracking-wide text-[var(--brand)]">
                       {t('first')}
                     </span>
                   )}
                   {idx === 1 && (
-                    <span className="mt-1 inline-block text-[11px] uppercase tracking-wide text-neutral-900/35">
+                    <span className="mt-1 inline-block text-[11px] font-semibold tracking-wide text-neutral-900/35">
                       {t('then')}
                     </span>
                   )}
                   {idx === 4 && (
-                    <span className="mt-1 inline-block text-[11px] uppercase tracking-wide text-neutral-900/35">
+                    <span className="mt-1 inline-block text-[11px] font-semibold tracking-wide text-neutral-900/35">
                       {t('later')}
                     </span>
                   )}
                 </span>
 
                 <span className="col-span-2 md:col-span-1 md:col-start-3">
-                  <span className="block text-[11px] uppercase tracking-wide text-neutral-900/35">
+                  <span className="block text-[11px] font-semibold tracking-wide text-neutral-900/35">
                     {t('moves')}
                   </span>
                   <span className="mt-0.5 block text-pretty text-[13px] leading-snug text-[#525252]">

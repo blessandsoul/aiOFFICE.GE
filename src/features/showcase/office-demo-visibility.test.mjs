@@ -2,194 +2,184 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
-import { createVisibilityGate } from './office-demo-visibility.mjs';
+import * as lifecycle from './office-demo-visibility.mjs';
 
-function observerHarness() {
-  let callback;
-  let observedTarget;
-  let disconnectCount = 0;
-  let options;
+function createObserverHarness() {
+  const instances = [];
 
-  class FakeIntersectionObserver {
-    constructor(nextCallback, nextOptions) {
-      callback = nextCallback;
-      options = nextOptions;
+  class Observer {
+    constructor(callback, options) {
+      this.callback = callback;
+      this.options = options;
+      this.observed = [];
+      this.disconnectCalls = 0;
+      instances.push(this);
     }
 
     observe(target) {
-      observedTarget = target;
+      this.observed.push(target);
     }
 
     disconnect() {
-      disconnectCount += 1;
+      this.disconnectCalls += 1;
+    }
+
+    emit(target, intersectionRatio, isIntersecting = intersectionRatio > 0) {
+      this.callback([{ target, intersectionRatio, isIntersecting }]);
     }
   }
 
+  return { Observer, instances };
+}
+
+function createDocumentHarness() {
+  const listeners = new Map();
+
   return {
-    FakeIntersectionObserver,
-    emit(isIntersecting, intersectionRatio = isIntersecting ? 1 : 0) {
-      callback([{ isIntersecting, intersectionRatio }]);
+    hidden: false,
+    listeners,
+    addEventListener(type, callback) {
+      listeners.set(type, callback);
     },
-    snapshot() {
-      return { disconnectCount, observedTarget, options };
+    removeEventListener(type, callback) {
+      if (listeners.get(type) === callback) listeners.delete(type);
+    },
+    setHidden(hidden) {
+      this.hidden = hidden;
+      listeners.get('visibilitychange')?.();
     },
   };
 }
 
-test('normal motion stays idle below fold and plays once on first visibility', () => {
-  const harness = observerHarness();
-  const target = { id: 'real-demo-box' };
-  let playCount = 0;
+function createTimerHarness() {
+  let nextId = 1;
+  const tasks = new Map();
 
-  const cleanup = createVisibilityGate({
+  return {
+    schedule(callback, delay) {
+      const id = nextId++;
+      tasks.set(id, { callback, delay, cancelled: false, fired: false });
+      return id;
+    },
+    cancel(id) {
+      const task = tasks.get(id);
+      if (task) task.cancelled = true;
+    },
+    fire(id) {
+      const task = tasks.get(id);
+      assert.ok(task, `unknown timer ${id}`);
+      if (task.cancelled || task.fired) return;
+      task.fired = true;
+      task.callback();
+    },
+    pending() {
+      return [...tasks.entries()].filter(([, task]) => !task.cancelled && !task.fired);
+    },
+  };
+}
+
+function createHarness(overrides = {}) {
+  const target = { id: 'office-story' };
+  const observer = createObserverHarness();
+  const pageDocument = createDocumentHarness();
+  const timers = createTimerHarness();
+  const calls = [];
+  const createOfficeDemoLoop = lifecycle.createOfficeDemoLoop;
+
+  assert.equal(typeof createOfficeDemoLoop, 'function');
+  const controller = createOfficeDemoLoop({
     target,
-    play: () => {
-      playCount += 1;
-    },
-    Observer: harness.FakeIntersectionObserver,
+    cycleMs: 7000,
+    play: () => calls.push('play'),
+    showFinal: () => calls.push('showFinal'),
+    reset: () => calls.push('reset'),
+    stop: () => calls.push('stop'),
+    Observer: observer.Observer,
+    pageDocument,
+    schedule: timers.schedule,
+    cancelScheduled: timers.cancel,
+    ...overrides,
   });
 
-  assert.equal(playCount, 0);
-  assert.equal(harness.snapshot().observedTarget, target);
-  assert.deepEqual(harness.snapshot().options, { threshold: 0.35 });
+  return { target, observer, pageDocument, timers, calls, controller };
+}
 
-  harness.emit(false);
-  assert.equal(playCount, 0);
+test('office stories start at 35 percent visibility and repeat after a 2 second final hold', () => {
+  const harness = createHarness();
+  const observed = harness.observer.instances[0];
 
-  harness.emit(true);
-  harness.emit(true);
-  assert.equal(playCount, 1);
-  assert.equal(harness.snapshot().disconnectCount, 1);
+  assert.deepEqual(observed.options, { threshold: 0.35 });
+  observed.emit(harness.target, 0.34, true);
+  assert.deepEqual(harness.calls, []);
 
-  cleanup();
+  observed.emit(harness.target, 0.35, true);
+  assert.deepEqual(harness.calls, ['play']);
+  assert.equal(harness.timers.pending()[0][1].delay, 9000);
+
+  harness.timers.fire(harness.timers.pending()[0][0]);
+  assert.deepEqual(harness.calls, ['play', 'stop', 'reset', 'play']);
 });
 
-test('normal motion requires the configured intersection ratio before playing', () => {
-  const harness = observerHarness();
-  let playCount = 0;
+test('offscreen and hidden office stories stop, reset, and restart cleanly', () => {
+  const harness = createHarness();
+  const observed = harness.observer.instances[0];
 
-  const cleanup = createVisibilityGate({
-    target: { id: 'threshold-demo-box' },
-    play: () => {
-      playCount += 1;
-    },
-    Observer: harness.FakeIntersectionObserver,
-  });
+  observed.emit(harness.target, 0.8);
+  observed.emit(harness.target, 0, false);
+  assert.deepEqual(harness.calls, ['play', 'stop', 'reset']);
+  assert.equal(harness.timers.pending().length, 0);
 
-  harness.emit(true, 0.34);
-  assert.equal(playCount, 0);
-  assert.equal(harness.snapshot().disconnectCount, 0);
+  observed.emit(harness.target, 0.8);
+  harness.pageDocument.setHidden(true);
+  assert.deepEqual(harness.calls, ['play', 'stop', 'reset', 'play', 'stop', 'reset']);
 
-  harness.emit(true, 0.35);
-  harness.emit(true, 1);
-  assert.equal(playCount, 1);
-  assert.equal(harness.snapshot().disconnectCount, 1);
-
-  cleanup();
+  harness.pageDocument.setHidden(false);
+  assert.equal(harness.calls.at(-1), 'play');
 });
 
-test('cleanup before visibility prevents a later observer callback from playing', () => {
-  const harness = observerHarness();
-  let playCount = 0;
+test('reduced motion renders the final office state without observers or timers', () => {
+  const harness = createHarness({ reducedMotion: true });
 
-  const cleanup = createVisibilityGate({
-    target: { id: 'removed-demo-box' },
-    play: () => {
-      playCount += 1;
-    },
-    Observer: harness.FakeIntersectionObserver,
-  });
-
-  cleanup();
-  harness.emit(true);
-
-  assert.equal(playCount, 0);
-  assert.equal(harness.snapshot().disconnectCount, 1);
+  assert.deepEqual(harness.calls, ['showFinal']);
+  assert.equal(harness.observer.instances.length, 0);
+  assert.equal(harness.timers.pending().length, 0);
 });
 
-test('Strict Mode-like setup and idempotent cleanup isolate stale observers', () => {
-  const firstHarness = observerHarness();
-  const secondHarness = observerHarness();
-  const plays = [];
+test('manual control cancels automatic repetition without resetting visitor input', () => {
+  const harness = createHarness();
+  const observed = harness.observer.instances[0];
 
-  const cleanupFirst = createVisibilityGate({
-    target: { id: 'first-mounted-box' },
-    play: () => plays.push('first'),
-    Observer: firstHarness.FakeIntersectionObserver,
-  });
+  observed.emit(harness.target, 0.8);
+  harness.controller.takeControl();
 
-  cleanupFirst();
-  cleanupFirst();
+  assert.deepEqual(harness.calls, ['play', 'stop']);
+  assert.equal(harness.timers.pending().length, 0);
 
-  const cleanupSecond = createVisibilityGate({
-    target: { id: 'second-mounted-box' },
-    play: () => plays.push('second'),
-    Observer: secondHarness.FakeIntersectionObserver,
-  });
-
-  firstHarness.emit(true);
-  secondHarness.emit(true);
-
-  assert.deepEqual(plays, ['second']);
-  assert.equal(firstHarness.snapshot().disconnectCount, 1);
-  assert.equal(secondHarness.snapshot().disconnectCount, 1);
-
-  cleanupSecond();
-  cleanupSecond();
-  assert.equal(secondHarness.snapshot().disconnectCount, 1);
+  observed.emit(harness.target, 0, false);
+  observed.emit(harness.target, 0.8);
+  assert.deepEqual(harness.calls, ['play', 'stop', 'stop']);
 });
 
-test('reduced motion emits the final timeline immediately without observing', () => {
-  let observerConstructed = false;
-  let playCount = 0;
-
-  class UnexpectedObserver {
-    constructor() {
-      observerConstructed = true;
-    }
-  }
-
-  const cleanup = createVisibilityGate({
-    target: { id: 'reduced-motion-box' },
-    play: () => {
-      playCount += 1;
-    },
-    reducedMotion: true,
-    Observer: UnexpectedObserver,
-  });
-
-  assert.equal(playCount, 1);
-  assert.equal(observerConstructed, false);
-  cleanup();
-});
-
-test('missing IntersectionObserver falls back to one immediate play', () => {
-  let playCount = 0;
-
-  const cleanup = createVisibilityGate({
-    target: { id: 'fallback-demo-box' },
-    play: () => {
-      playCount += 1;
-    },
-    Observer: undefined,
-  });
-
-  assert.equal(playCount, 1);
-  cleanup();
-  cleanup();
-  assert.equal(playCount, 1);
-});
-
-test('both office demos wire the gate to a real rendered box', () => {
-  for (const component of ['OfficeExceptionGuard.tsx', 'OfficeReconciliationGuard.tsx']) {
+test('all office stories use the shared visible loop and expose replay', () => {
+  for (const component of [
+    'OfficeFlow.tsx',
+    'OfficeExceptionGuard.tsx',
+    'OfficeLeak.tsx',
+    'OfficeReconciliationGuard.tsx',
+    'OfficeMap.tsx',
+    'HeroProof.tsx',
+  ]) {
     const source = readFileSync(new URL(component, import.meta.url), 'utf8');
 
-    assert.match(source, /import \{ createVisibilityGate \} from '.\/office-demo-visibility\.mjs';/u);
-    assert.match(source, /const visibilityRef = useRef<HTMLDivElement>\(null\);/u);
-    assert.match(source, /<div\s+ref=\{visibilityRef\}/u);
-    assert.match(source, /target: visibilityRef\.current/u);
-    assert.match(source, /const cleanupVisibility = createVisibilityGate/u);
-    assert.match(source, /cleanupVisibility\(\);/u);
-    assert.doesNotMatch(source, /player\.play\(\);/u);
+    assert.match(source, /createOfficeDemoLoop/u, `${component} must use the shared office loop`);
+    assert.match(source, /\.replay\(\)/u, `${component} must expose replay`);
+    assert.doesNotMatch(source, /createVisibilityGate|setInterval/u);
+  }
+});
+
+test('manual leak and map stories permanently yield to visitor input', () => {
+  for (const component of ['OfficeLeak.tsx', 'OfficeMap.tsx']) {
+    const source = readFileSync(new URL(component, import.meta.url), 'utf8');
+    assert.match(source, /\.takeControl\(\)/u, `${component} must yield to manual input`);
   }
 });

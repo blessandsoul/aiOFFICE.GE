@@ -1,36 +1,85 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useReducedMotion } from 'framer-motion';
 import { SectionContainer } from '@/components/layout/SectionContainer';
+import { createTimelinePlayer } from './office-demo-models.mjs';
+import { createOfficeDemoLoop } from './office-demo-visibility.mjs';
 
-/* =========================================================================
-   OfficeLeak: the Georgia-correct calculator.
+type DemoController = {
+  replay: () => void;
+  takeControl: () => void;
+  cleanup: () => void;
+};
 
-   Every automation vendor on the internet puts an "hours saved" slider on the page. All of
-   them were built on an American wage. A Georgian working hour costs about 14 GEL and an
-   American one about 38 dollars, so saving the US-average handful of hours a week is worth
-   roughly a hundred and something lari a month here, for the entire automation. Nobody buys
-   that, and they are right not to.
-
-   So this counts the money that leaks OUT instead: the order that vanished in a chat thread,
-   the delivery that went out wrong, the waybill fine. Those are worth real money in Georgia
-   and they are what a distributor already lies awake about.
-
-   Every input is his. We supply no percentage and no benchmark. If his number comes out small,
-   the widget says so plainly, and he has saved himself a meeting. A calculator that can only
-   produce a large number is a slot machine.
-   ========================================================================= */
+const LEAK_CYCLE_MS = 7000;
+const LEAK_DEMO_STAGES = [0, 1, 2, 3];
+const LEAK_DEMO_FRAMES = [
+  { orders: 20, viber: 20, retype: 25, errors: 1, ticket: 80, fines: 0 },
+  { orders: 35, viber: 35, retype: 45, errors: 2, ticket: 120, fines: 600 },
+  { orders: 50, viber: 45, retype: 60, errors: 3, ticket: 150, fines: 1200 },
+  { orders: 60, viber: 55, retype: 70, errors: 4, ticket: 180, fines: 1800 },
+];
 
 export function OfficeLeak() {
   const t = useTranslations('product.leak');
+  const actions = useTranslations('product.flow');
+  const reduced = Boolean(useReducedMotion());
 
-  const [orders, setOrders] = useState(60);
-  const [viber, setViber] = useState(55); // percent
-  const [retype, setRetype] = useState(70); // percent of those
-  const [errors, setErrors] = useState(4); // percent that go wrong
-  const [ticket, setTicket] = useState(180);
-  const [fines, setFines] = useState(1800); // GEL last year
+  const [orders, setOrders] = useState(LEAK_DEMO_FRAMES[0].orders);
+  const [viber, setViber] = useState(LEAK_DEMO_FRAMES[0].viber);
+  const [retype, setRetype] = useState(LEAK_DEMO_FRAMES[0].retype);
+  const [errors, setErrors] = useState(LEAK_DEMO_FRAMES[0].errors);
+  const [ticket, setTicket] = useState(LEAK_DEMO_FRAMES[0].ticket);
+  const [fines, setFines] = useState(LEAK_DEMO_FRAMES[0].fines);
+  const [manual, setManual] = useState(false);
+  const manualRef = useRef(false);
+  const visibilityRef = useRef<HTMLDivElement>(null);
+  const controllerRef = useRef<DemoController | null>(null);
+
+  useEffect(() => {
+    const applyFrame = (index: number) => {
+      if (manualRef.current) return;
+      const frame = LEAK_DEMO_FRAMES[index];
+      setOrders(frame.orders);
+      setViber(frame.viber);
+      setRetype(frame.retype);
+      setErrors(frame.errors);
+      setTicket(frame.ticket);
+      setFines(frame.fines);
+    };
+    const player = createTimelinePlayer({
+      stages: LEAK_DEMO_STAGES,
+      onStage: applyFrame,
+      durationMs: LEAK_CYCLE_MS,
+    });
+    const controller = createOfficeDemoLoop({
+      target: visibilityRef.current,
+      reducedMotion: reduced,
+      cycleMs: LEAK_CYCLE_MS,
+      play: player.play,
+      showFinal: () => applyFrame(LEAK_DEMO_STAGES[LEAK_DEMO_STAGES.length - 1]),
+      reset: () => applyFrame(LEAK_DEMO_STAGES[0]),
+      stop: player.cancel,
+    });
+
+    controllerRef.current = controller;
+    return () => {
+      controller.cleanup();
+      player.cancel();
+      if (controllerRef.current === controller) controllerRef.current = null;
+    };
+  }, [reduced]);
+
+  const takeControl = (setter: (value: number) => void) => (value: number) => {
+    if (!manualRef.current) {
+      manualRef.current = true;
+      setManual(true);
+      controllerRef.current?.takeControl();
+    }
+    setter(value);
+  };
 
   const perMonth = orders * 30;
   const messy = perMonth * (viber / 100);
@@ -47,10 +96,9 @@ export function OfficeLeak() {
 
   return (
     <SectionContainer className="py-20 md:py-28">
-      <div className="grid gap-10 lg:grid-cols-[1fr_minmax(300px,420px)] lg:gap-14">
-        {/* LEFT: his inputs */}
+      <div ref={visibilityRef} className="grid gap-10 lg:grid-cols-[1fr_minmax(300px,420px)] lg:gap-14">
         <div>
-          <span className="text-[12px] uppercase tracking-wide text-neutral-900/40">
+          <span className="text-[12px] font-semibold tracking-wide text-neutral-900/40">
             {t('eyebrow')}
           </span>
           <h2 className="mt-4 max-w-lg text-balance font-display text-3xl font-extrabold leading-[1.1] tracking-tight text-neutral-900 md:text-4xl">
@@ -60,20 +108,28 @@ export function OfficeLeak() {
             {t('subtitle')}
           </p>
 
+          <button
+            type="button"
+            onClick={() => controllerRef.current?.replay()}
+            disabled={manual}
+            className="mt-5 min-h-[44px] rounded-xl bg-neutral-900 px-5 text-[13px] font-bold text-white transition-transform active:scale-[0.97] disabled:cursor-default disabled:opacity-45 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2"
+          >
+            {actions('again')}
+          </button>
+
           <div className="mt-8 grid gap-6 sm:grid-cols-2">
-            <Range label={t('orders')} value={orders} min={5} max={500} step={5} onChange={setOrders} />
-            <Range label={t('ticket')} value={ticket} min={20} max={2000} step={10} onChange={setTicket} suffix=" GEL" />
-            <Range label={t('viber')} value={viber} min={0} max={100} step={5} onChange={setViber} suffix="%" />
-            <Range label={t('retype')} value={retype} min={0} max={100} step={5} onChange={setRetype} suffix="%" />
-            <Range label={t('errors')} value={errors} min={0} max={20} step={1} onChange={setErrors} suffix="%" />
-            <Range label={t('fines')} value={fines} min={0} max={20000} step={100} onChange={setFines} suffix=" GEL" />
+            <Range label={t('orders')} value={orders} min={5} max={500} step={5} onChange={takeControl(setOrders)} />
+            <Range label={t('ticket')} value={ticket} min={20} max={2000} step={10} onChange={takeControl(setTicket)} suffix=" GEL" />
+            <Range label={t('viber')} value={viber} min={0} max={100} step={5} onChange={takeControl(setViber)} suffix="%" />
+            <Range label={t('retype')} value={retype} min={0} max={100} step={5} onChange={takeControl(setRetype)} suffix="%" />
+            <Range label={t('errors')} value={errors} min={0} max={20} step={1} onChange={takeControl(setErrors)} suffix="%" />
+            <Range label={t('fines')} value={fines} min={0} max={20000} step={100} onChange={takeControl(setFines)} suffix=" GEL" />
           </div>
         </div>
 
-        {/* RIGHT: his number */}
         <div className="flex flex-col gap-4">
           <div className="rounded-2xl bg-[#fafafa] p-5 shadow-[0_0_0_1px_rgba(0,0,0,0.06)]">
-            <span className="text-[12px] uppercase tracking-wide text-neutral-900/40">
+            <span className="text-[12px] font-semibold tracking-wide text-neutral-900/40">
               {t('lost')}
             </span>
             <p className="mt-2 font-display text-3xl font-extrabold tabular-nums leading-none text-neutral-900">
@@ -83,7 +139,7 @@ export function OfficeLeak() {
           </div>
 
           <div className="rounded-2xl bg-[#fafafa] p-5 shadow-[0_0_0_1px_rgba(0,0,0,0.06)]">
-            <span className="text-[12px] uppercase tracking-wide text-neutral-900/40">
+            <span className="text-[12px] font-semibold tracking-wide text-neutral-900/40">
               {t('finesOut')}
             </span>
             <p className="mt-2 font-display text-3xl font-extrabold tabular-nums leading-none text-neutral-900">
@@ -96,7 +152,7 @@ export function OfficeLeak() {
             className="rounded-2xl p-6 md:p-7"
             style={{ background: 'color-mix(in srgb, var(--brand) 14%, white)' }}
           >
-            <span className="text-[12px] uppercase tracking-wide text-neutral-900/50">
+            <span className="text-[12px] font-semibold tracking-wide text-neutral-900/50">
               {t('total')}
             </span>
             <p className="mt-3 font-display text-5xl font-extrabold tabular-nums leading-none text-neutral-900 md:text-6xl">

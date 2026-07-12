@@ -1,13 +1,15 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import {
+import * as models from './office-demo-models.mjs';
+
+const {
   EXCEPTION_STAGES,
   RECONCILIATION_STAGES,
   createTimelinePlayer,
   exceptionFrame,
   reconciliationFrame,
-} from './office-demo-models.mjs';
+} = models;
 
 function createClock() {
   let now = 0;
@@ -45,6 +47,30 @@ function createClock() {
     },
   };
 }
+
+test('flow approval is the only transition from draft to approved', () => {
+  const flowFrame = models.flowFrame ?? (() => ({}));
+
+  assert.deepEqual(models.FLOW_STAGES, [
+    'received',
+    'checked',
+    'document-prepared',
+    'human-approval',
+    'ready',
+  ]);
+
+  const frames = models.FLOW_STAGES?.map(flowFrame) ?? [];
+  assert.deepEqual(
+    frames.map(({ stage, status, approved }) => ({ stage, status, approved })),
+    [
+      { stage: 'received', status: 'draft', approved: false },
+      { stage: 'checked', status: 'draft', approved: false },
+      { stage: 'document-prepared', status: 'draft', approved: false },
+      { stage: 'human-approval', status: 'awaiting-approval', approved: false },
+      { stage: 'ready', status: 'approved', approved: true },
+    ],
+  );
+});
 
 test('exception frames hold an unreadable quantity until a human supplies 12', () => {
   assert.deepEqual(EXCEPTION_STAGES, [

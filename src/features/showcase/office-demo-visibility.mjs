@@ -1,47 +1,12 @@
-/**
- * Start one existing demo timeline when its rendered box first becomes visible.
- * Reduced-motion and no-observer environments fall back to an immediate play.
- */
-export function createVisibilityGate({
-  target,
-  play,
-  reducedMotion = false,
-  Observer = globalThis.IntersectionObserver,
-  threshold = 0.35,
-}) {
-  if (typeof play !== 'function') {
-    throw new TypeError('createVisibilityGate requires a play function');
-  }
+import { createDemoLoop } from '../home/components/lib/demo-loop.mjs';
 
-  let active = true;
-  let hasPlayed = false;
-  let observer = null;
+export const OFFICE_DEMO_THRESHOLD = 0.35;
+export const OFFICE_DEMO_HOLD_MS = 2000;
 
-  const playOnce = () => {
-    if (!active || hasPlayed) return;
-    hasPlayed = true;
-    play();
-  };
-
-  if (reducedMotion || !target || typeof Observer !== 'function') {
-    playOnce();
-  } else {
-    observer = new Observer(
-      ([entry]) => {
-        const meetsThreshold = (entry?.intersectionRatio ?? 0) >= threshold;
-        if (hasPlayed || !entry?.isIntersecting || !meetsThreshold) return;
-        playOnce();
-        observer?.disconnect();
-        observer = null;
-      },
-      { threshold },
-    );
-    observer.observe(target);
-  }
-
-  return function cleanupVisibilityGate() {
-    active = false;
-    observer?.disconnect();
-    observer = null;
-  };
+export function createOfficeDemoLoop(options) {
+  return createDemoLoop({
+    threshold: OFFICE_DEMO_THRESHOLD,
+    holdMs: OFFICE_DEMO_HOLD_MS,
+    ...options,
+  });
 }

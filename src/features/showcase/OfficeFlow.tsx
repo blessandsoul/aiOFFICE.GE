@@ -1,219 +1,193 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
+import { Ico } from '@/components/common/Ico';
 import { SectionContainer } from '@/components/layout/SectionContainer';
 import { cn } from '@/lib/utils';
+import {
+  FLOW_STAGES,
+  createTimelinePlayer,
+  flowFrame,
+} from './office-demo-models.mjs';
+import { createOfficeDemoLoop } from './office-demo-visibility.mjs';
 
-/* =========================================================================
-   OfficeFlow: the signature.
+type DemoController = {
+  replay: () => void;
+  cleanup: () => void;
+};
 
-   An owner does not buy "back-office automation". He does not know what that is and he has
-   heard it from four consultants already. What he knows is the Viber message that arrives at
-   twenty to midnight on a Friday with a voice note and a photograph of a handwritten list,
-   and what it costs him that nobody handles it until Monday.
-
-   So the widget is that message, and then the six things that happen to it. No jargon, no
-   architecture diagram. If a stranger presses play and cannot tell what happened, the section
-   has failed and we would rather know.
-
-   The human approval step is deliberately IN the flow and visibly stops it. That is not a
-   caveat we buried, it is the reason this is safe to put anywhere near a tax filing, and it
-   is the difference between us and the demo he saw on LinkedIn.
-   ========================================================================= */
-
-const STEPS = ['s1', 's2', 's3', 's4', 's5', 's6'] as const;
-const HUMAN_AT = 4; // index of the approval step, zero-based
-const STEP_MS = 1150;
+const FLOW_CYCLE_MS = 7000;
+const STAGE_COPY = ['s1', 's2', 's3', 's4', 's5'] as const;
+const STAGE_ICONS = {
+  received: 'solar:chat-round-dots-bold-duotone',
+  checked: 'solar:check-circle-bold-duotone',
+  'document-prepared': 'solar:text-bold-duotone',
+  'human-approval': 'solar:shield-check-bold-duotone',
+  ready: 'solar:check-circle-bold-duotone',
+} as const;
+const OFFICE_FLOW_STAGES = FLOW_STAGES as (keyof typeof STAGE_ICONS)[];
 
 export function OfficeFlow() {
   const t = useTranslations('product.flow');
-  const reduced = useReducedMotion();
-  const [at, setAt] = useState(-1);
-  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const reduced = Boolean(useReducedMotion());
+  const [stage, setStage] = useState(OFFICE_FLOW_STAGES[0]);
+  const visibilityRef = useRef<HTMLDivElement>(null);
+  const controllerRef = useRef<DemoController | null>(null);
 
-  const clear = useCallback(() => {
-    timers.current.forEach(clearTimeout);
-    timers.current = [];
-  }, []);
-  useEffect(() => clear, [clear]);
-
-  const run = useCallback(() => {
-    clear();
-    setAt(0);
-    if (reduced) {
-      setAt(STEPS.length - 1);
-      return;
-    }
-    STEPS.forEach((_, i) => {
-      if (i === 0) return;
-      timers.current.push(setTimeout(() => setAt(i), i * STEP_MS));
+  useEffect(() => {
+    const player = createTimelinePlayer({
+      stages: OFFICE_FLOW_STAGES,
+      onStage: setStage,
+      durationMs: FLOW_CYCLE_MS,
     });
-  }, [clear, reduced]);
+    const controller = createOfficeDemoLoop({
+      target: visibilityRef.current,
+      reducedMotion: reduced,
+      cycleMs: FLOW_CYCLE_MS,
+      play: player.play,
+      showFinal: () => setStage(OFFICE_FLOW_STAGES[OFFICE_FLOW_STAGES.length - 1]),
+      reset: () => setStage(OFFICE_FLOW_STAGES[0]),
+      stop: player.cancel,
+    });
 
-  const running = at >= 0 && at < STEPS.length - 1;
-  const done = at === STEPS.length - 1;
+    controllerRef.current = controller;
+    return () => {
+      controller.cleanup();
+      player.cancel();
+      if (controllerRef.current === controller) controllerRef.current = null;
+    };
+  }, [reduced]);
+
+  const activeIndex = OFFICE_FLOW_STAGES.indexOf(stage);
+  const activeFrame = flowFrame(stage);
 
   return (
     <SectionContainer className="py-20 md:py-28">
-      <div className="grid gap-10 lg:grid-cols-[minmax(280px,380px)_1fr] lg:gap-14">
-        <div>
-          <span className="text-[12px] uppercase tracking-wide text-neutral-900/40">
-            {t('eyebrow')}
-          </span>
-          <h2 className="mt-4 text-balance font-display text-3xl font-extrabold leading-[1.1] tracking-tight text-neutral-900 md:text-4xl">
-            {t('heading')}
-          </h2>
-          <p className="mt-3 text-pretty text-[15px] leading-relaxed text-[#525252]">
-            {t('subtitle')}
-          </p>
+      <div ref={visibilityRef}>
+        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-3xl">
+            <span className="text-[12px] font-semibold tracking-wide text-neutral-900/45">
+              {t('eyebrow')}
+            </span>
+            <h2 className="mt-4 text-balance font-display text-3xl font-extrabold leading-[1.1] tracking-tight text-neutral-900 md:text-4xl">
+              {t('heading')}
+            </h2>
+            <p className="mt-3 max-w-2xl text-pretty text-[15px] leading-relaxed text-[#525252]">
+              {t('subtitle')}
+            </p>
+          </div>
 
           <button
             type="button"
-            onClick={run}
-            disabled={running}
-            className={cn(
-              'mt-8 inline-flex h-14 items-center rounded-full px-8 text-[15px] font-bold text-white',
-              'transition-[transform,filter] duration-150 ease-out active:scale-[0.96] md:hover:brightness-110',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2',
-              running && 'opacity-70',
-            )}
-            style={{ background: 'var(--brand)' }}
+            onClick={() => controllerRef.current?.replay()}
+            className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-neutral-900 px-5 text-[14px] font-bold text-white transition-transform active:scale-[0.97] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2"
           >
-            {running ? t('running') : done ? t('again') : t('play')}
+            <Ico name="solar:refresh-bold-duotone" className="h-5 w-5" />
+            {activeFrame.approved ? t('again') : t('running')}
           </button>
-
-          {/* the two clocks. the left one is what today costs him. */}
-          <div className="mt-10 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-2xl bg-[#fafafa] p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.06)]">
-              <span className="text-[11px] uppercase tracking-wide text-neutral-900/40">
-                {t('manual')}
-              </span>
-              <p className="mt-2 text-pretty text-[13px] font-semibold leading-snug text-neutral-900">
-                {t('handTime')}
-              </p>
-            </div>
-            <div
-              className="rounded-2xl p-4"
-              style={{ background: 'color-mix(in srgb, var(--brand) 12%, white)' }}
-            >
-              <span className="text-[11px] uppercase tracking-wide text-neutral-900/50">
-                {t('auto')}
-              </span>
-              <p className="mt-2 text-pretty text-[13px] font-semibold leading-snug text-neutral-900">
-                {t('autoTime')}
-              </p>
-            </div>
-          </div>
-
-          <p className="mt-6 text-pretty text-[12px] leading-relaxed text-[#737373]">{t('note')}</p>
         </div>
 
-        {/* THE FLOW */}
-        <div className="relative">
-          {/* the phone, holding the message that starts everything */}
-          <div className="mb-4 max-w-sm rounded-2xl bg-[#0e0e11] p-4">
-            <div className="flex items-start gap-3">
-              <span
-                className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[13px] font-bold text-white"
-                style={{ background: 'var(--brand)' }}
-                aria-hidden="true"
-              >
-                გ
+        <div className="mt-10 overflow-hidden rounded-3xl bg-[#f7f7f8] shadow-[0_0_0_1px_rgba(0,0,0,0.07),0_28px_70px_-48px_rgba(0,0,0,0.38)]">
+          <div className="flex min-w-0 items-start gap-3 bg-[#0e0e11] p-4 text-white sm:items-center sm:p-5">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand)]">
+              <Ico name="solar:chat-round-dots-bold-duotone" className="h-5 w-5" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <span className="block text-[11px] font-medium text-white/50">23:40 · Viber</span>
+              <span className="mt-1 block text-pretty text-[14px] font-semibold leading-snug text-white/90">
+                {t('s1sub')}
               </span>
-              <div className="min-w-0">
-                <span className="block text-[11px] text-white/35">23:40</span>
-                <div className="mt-1 rounded-2xl rounded-tl-sm bg-white/[0.08] px-3 py-2">
-                  <span className="flex items-center gap-2 text-[13px] text-white/80">
-                    <span className="flex gap-[2px]" aria-hidden="true">
-                      {[3, 7, 5, 9, 4, 8, 3].map((h, i) => (
-                        <span
-                          key={i}
-                          className="w-[2px] rounded-full bg-white/40"
-                          style={{ height: h * 2 }}
-                        />
-                      ))}
+            </div>
+            <span className="hidden items-end gap-[3px] sm:flex" aria-hidden="true">
+              {[8, 16, 11, 22, 13, 19, 9, 15].map((height, index) => (
+                <span
+                  key={`${height}-${index}`}
+                  className="w-[3px] rounded-full bg-white/35"
+                  style={{ height }}
+                />
+              ))}
+            </span>
+          </div>
+
+          <div className="p-3 sm:p-5 lg:p-6">
+            <ol className="grid grid-cols-1 gap-3 lg:grid-cols-5" aria-live="polite">
+              {OFFICE_FLOW_STAGES.map((item, index) => {
+                const frame = flowFrame(item);
+                const reached = index <= activeIndex;
+                const current = item === stage;
+                const isApproval = item === 'human-approval';
+                const isReady = frame.approved && reached;
+
+                return (
+                  <motion.li
+                    key={item}
+                    aria-current={current ? 'step' : undefined}
+                    initial={false}
+                    animate={{ opacity: reached ? 1 : 0.48, y: 0 }}
+                    transition={{ duration: reduced ? 0 : 0.24, ease: [0.23, 1, 0.32, 1] }}
+                    className={cn(
+                      'relative min-w-0 rounded-2xl bg-white p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.07)]',
+                      isApproval && reached && 'bg-[#fffaf0] shadow-[0_0_0_1px_rgba(217,119,6,0.55)]',
+                      isReady && 'bg-[#f0fdf8] shadow-[0_0_0_1px_rgba(13,148,136,0.5)]',
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        'flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-900/6 text-neutral-900/35',
+                        reached && !isApproval && !isReady && 'bg-[var(--brand)] text-white',
+                        isApproval && reached && 'bg-[#d97706] text-white',
+                        isReady && 'bg-[#0d9488] text-white',
+                      )}
+                    >
+                      <Ico name={STAGE_ICONS[item]} className="h-6 w-6" />
                     </span>
-                    0:14
+                    <span className="mt-4 block text-[14px] font-bold leading-snug text-neutral-900">
+                      {t(STAGE_COPY[index])}
+                    </span>
+                    <span className="mt-1.5 block text-pretty text-[12.5px] leading-relaxed text-[#626262]">
+                      {t(`${STAGE_COPY[index]}sub`)}
+                    </span>
+                    {isApproval && (
+                      <span className="mt-3 inline-flex rounded-full bg-[#d97706]/12 px-2.5 py-1 text-[10px] font-bold text-[#92400e]">
+                        {t('human')}
+                      </span>
+                    )}
+                  </motion.li>
+                );
+              })}
+            </ol>
+
+            <div
+              data-office-comparison
+              className="mt-4 grid gap-3 rounded-2xl bg-[#0e0e11] p-3 text-white sm:grid-cols-2 sm:p-4"
+            >
+              <div className="flex min-w-0 items-start gap-3 rounded-xl bg-white/[0.06] p-3">
+                <Ico name="solar:clock-circle-bold-duotone" className="mt-0.5 h-5 w-5 shrink-0 text-white/55" />
+                <div className="min-w-0">
+                  <span className="block text-[11px] font-semibold text-white/50">{t('manual')}</span>
+                  <span className="mt-1 block text-pretty text-[13px] font-semibold leading-snug text-white/85">
+                    {t('handTime')}
                   </span>
                 </div>
-                <div className="mt-1.5 h-14 w-24 rounded-lg bg-white/[0.06] p-1.5">
-                  <span className="block h-full w-full rounded bg-[repeating-linear-gradient(115deg,rgba(255,255,255,0.10)_0_3px,transparent_3px_7px)]" />
+              </div>
+              <div className="flex min-w-0 items-start gap-3 rounded-xl bg-white p-3 text-neutral-900">
+                <Ico name="solar:bolt-bold-duotone" className="mt-0.5 h-5 w-5 shrink-0 text-[var(--brand)]" />
+                <div className="min-w-0">
+                  <span className="block text-[11px] font-semibold text-neutral-900/50">{t('auto')}</span>
+                  <span className="mt-1 block text-pretty text-[13px] font-semibold leading-snug">
+                    {t('autoTime')}
+                  </span>
                 </div>
               </div>
             </div>
           </div>
-
-          <ol className="relative flex flex-col gap-2.5">
-            {/* the spine */}
-            <span
-              className="absolute bottom-3 left-[15px] top-3 w-px bg-[#e5e5e5]"
-              aria-hidden="true"
-            />
-            <motion.span
-              className="absolute left-[15px] top-3 w-px origin-top"
-              style={{ background: 'var(--brand)', bottom: 12 }}
-              initial={false}
-              animate={{ scaleY: at < 0 ? 0 : (at + 1) / STEPS.length }}
-              transition={{ duration: reduced ? 0 : 0.5, ease: [0.23, 1, 0.32, 1] }}
-              aria-hidden="true"
-            />
-
-            {STEPS.map((s, i) => {
-              const lit = at >= i;
-              const isHuman = i === HUMAN_AT;
-              return (
-                <li key={s} className="relative flex gap-4 pl-0">
-                  <span className="relative z-10 mt-2.5 flex h-8 w-8 shrink-0 items-center justify-center">
-                    <motion.span
-                      initial={false}
-                      animate={{ scale: lit ? 1 : 0.95, opacity: lit ? 1 : 0.35 }}
-                      transition={{ duration: reduced ? 0 : 0.24, ease: [0.23, 1, 0.32, 1] }}
-                      className={cn(
-                        'flex h-8 w-8 items-center justify-center rounded-full text-[12px] font-bold tabular-nums',
-                        lit ? 'text-white' : 'bg-white text-neutral-900/30 shadow-[0_0_0_1px_rgba(0,0,0,0.08)]',
-                      )}
-                      style={lit ? { background: isHuman ? '#f59e0b' : 'var(--brand)' } : undefined}
-                    >
-                      {isHuman ? (
-                        <span aria-hidden="true">!</span>
-                      ) : (
-                        i + 1
-                      )}
-                    </motion.span>
-                  </span>
-
-                  <motion.div
-                    initial={false}
-                    animate={{ opacity: lit ? 1 : 0.4, y: 0 }}
-                    transition={{ duration: reduced ? 0 : 0.26, ease: [0.23, 1, 0.32, 1] }}
-                    className={cn(
-                      'min-w-0 flex-1 rounded-2xl px-4 py-3',
-                      lit
-                        ? isHuman
-                          ? 'bg-[#fffbeb] shadow-[0_0_0_1px_#f59e0b]'
-                          : 'bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.08)]'
-                        : 'bg-[#fafafa]',
-                    )}
-                  >
-                    <span className="flex flex-wrap items-baseline gap-x-2">
-                      <span className="text-[14px] font-semibold text-neutral-900">{t(s)}</span>
-                      {isHuman && (
-                        <span className="rounded-full bg-[#f59e0b]/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#92400e]">
-                          {t('human')}
-                        </span>
-                      )}
-                    </span>
-                    <span className="mt-1 block text-pretty text-[13px] leading-relaxed text-[#525252]">
-                      {t(`${s}sub`)}
-                    </span>
-                  </motion.div>
-                </li>
-              );
-            })}
-          </ol>
         </div>
+
+        <p className="mt-4 max-w-3xl text-pretty text-[12.5px] leading-relaxed text-[#737373]">
+          {t('note')}
+        </p>
       </div>
     </SectionContainer>
   );

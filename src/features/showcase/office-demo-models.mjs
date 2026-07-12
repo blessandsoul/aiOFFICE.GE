@@ -1,5 +1,20 @@
 export const EXCEPTION_STAGES = ['received', 'uncertain', 'human-correction', 'resumed'];
+export const FLOW_STAGES = [
+  'received',
+  'checked',
+  'document-prepared',
+  'human-approval',
+  'ready',
+];
 export const RECONCILIATION_STAGES = ['checking', 'blocked', 'correcting', 'ready'];
+
+const FLOW_FRAMES = {
+  received: { status: 'draft', approved: false },
+  checked: { status: 'draft', approved: false },
+  'document-prepared': { status: 'draft', approved: false },
+  'human-approval': { status: 'awaiting-approval', approved: false },
+  ready: { status: 'approved', approved: true },
+};
 
 const EXCEPTION_FRAMES = {
   received: {
@@ -66,6 +81,12 @@ const RECONCILIATION_FRAMES = {
 export function exceptionFrame(stage) {
   const frame = EXCEPTION_FRAMES[stage];
   if (!frame) throw new RangeError(`Unknown exception stage: ${stage}`);
+  return { stage, ...frame };
+}
+
+export function flowFrame(stage) {
+  const frame = FLOW_FRAMES[stage];
+  if (!frame) throw new RangeError(`Unknown flow stage: ${stage}`);
   return { stage, ...frame };
 }
 
