@@ -62,7 +62,7 @@ const PRODUCT_LANDING_CONFIG = {
     resourceTitles: { ka: ['როგორ ქმნის aiNOW ბიზნეს-საიტებს','როგორ პოულობენ საიტს Google-ში','aiNOW-ის რეალური პროექტები'], en: ['How aiNOW builds business websites','How customers find a site on Google','Real projects by aiNOW'], ru: ['Как aiNOW создаёт сайты для бизнеса','Как клиенты находят сайт в Google','Реальные проекты aiNOW'] },
   },
   aioffice: {
-    integrations: [['solar:chat-round-dots-bold-duotone','Viber'],['solar:document-text-bold-duotone','RS.ge'],['solar:calculator-bold-duotone','1C'],['solar:database-bold-duotone','ORIS / Balance']],
+    integrations: [['solar:letter-bold-duotone','Email'],['solar:calendar-bold-duotone','Calendar'],['solar:document-bold-duotone','Cloud files'],['solar:checklist-minimalistic-bold-duotone','Task systems']],
     resources: ['/services/automation','/ai-biznesistvis','/projects'],
     resourceTitles: { ka: ['ბიზნეს-პროცესების ავტომატიზაცია','როგორ დავნერგოთ AI ბიზნესში','aiNOW-ის რეალური პროექტები'], en: ['Business process automation','How to introduce AI in a business','Real projects by aiNOW'], ru: ['Автоматизация бизнес-процессов','Как внедрить AI в бизнесе','Реальные проекты aiNOW'] },
   },

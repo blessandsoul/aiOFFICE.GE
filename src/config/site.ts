@@ -46,7 +46,7 @@ export const SITE = {
   manifest: {
     name: "aiOFFICE",
     short: "aiOFFICE",
-    description: "Back office automation for Georgian companies: orders, documents, approvals, RS.ge.",
+    description: "An AI office assistant for tasks, email, documents, approvals, reminders, and reports.",
     background: "#fbfcfc",
     theme: "#0d9488",
   },
@@ -65,42 +65,42 @@ export const SITE = {
    */
   seo: {
     disambiguating:
-      "Back-office process automation for Georgian companies: orders, documents, approvals, reports, RS.ge waybills, and the glue to 1C, ORIS or Balance. It is not a customer-facing chatbot and it is not a consultancy selling a strategy deck.",
-    serviceType: "Back-office automation for Georgian companies, one process at a time",
+      "An AI office assistant for Georgian companies that organizes tasks, email, documents, approvals, reminders, meeting follow-ups and reports. It is not an accounting product and it is not a customer-facing chatbot.",
+    serviceType: "AI office assistant and internal workflow automation for Georgian companies",
     audienceName:
       "Georgian companies in distribution, retail, logistics, healthcare, construction and hospitality",
     areaServed: "GE",
     knowsAbout: [
       "Business process automation",
-      "RS.ge waybill",
-      "Georgian tax compliance",
-      "1C",
-      "ORIS accounting",
-      "Balance.ge",
-      "Document processing",
-      "Workflow automation",
-      "Internal copilot",
+      "Task management",
+      "Email triage",
+      "Document organization",
+      "Approval workflows",
+      "Meeting follow-up",
+      "Deadline reminders",
+      "Office reporting",
+      "Internal knowledge search",
     ],
     features: [
-      "A review that identifies the first process worth automating",
-      "One process with an agreed scope, owner and approval point",
-      "Draft RS.ge waybills, inventory updates and invoices for review",
-      "Connection to 1C, ORIS or Balance after access and compatibility are checked",
-      "A visible activity trail for every automated step",
+      "Tasks collected from email, chat and forms into one queue",
+      "Automatic owners, deadlines and reminders based on approved rules",
+      "Meeting notes converted into assigned follow-up tasks",
+      "Documents organized with the current version and approval status visible",
+      "Daily and weekly summaries prepared from real office activity",
     ],
     boundary:
-      "aiOFFICE is the inside of the company. If the whole job is turning a pile of documents into posted ledger rows, that is productized and it lives at aiDOCS.ge. Answering customers is aiSTAFF.ge for chat and aiCALL.ge for the phone.",
+      "aiOFFICE organizes work inside the company. Turning source documents into accounting records belongs to aiDOCS.ge. Customer chat belongs to aiSTAFF.ge, phone calls to aiCALL.ge, and mobile app creation to aiAPP.ge.",
     limits: [
-      "The business case is based on fewer lost orders, fewer data-entry mistakes and safer document handling. aiNOW does not reuse savings figures from another company.",
+      "The business case is measured on the client's own missed tasks, response time, overdue approvals and manual reporting effort. aiNOW does not reuse savings figures from another company.",
       "aiNOW does not promise headcount reduction.",
-      "aiOFFICE does not include Georgian handwriting recognition.",
-      "aiNOW confirms a 1C, ORIS or Balance integration only after checking the client's installation and access.",
+      "aiOFFICE is not an accounting system and does not submit tax documents.",
+      "Connections to email, calendars, storage and existing business tools are confirmed only after access and compatibility are checked.",
       "Every result is measured on the client's own process. aiNOW publishes no borrowed benchmark as proof.",
     ],
     commitment:
-      "Before work starts, aiNOW writes down the process, the approval boundary and the business result that will be measured.",
+      "Before work starts, aiNOW writes down the office routine, owners, deadlines, approval boundary and the business result that will be measured.",
     summary:
-      "aiOFFICE automates one back-office process at a time for Georgian companies. It connects orders, documents, approvals, reports and RS.ge drafts while keeping financial and tax actions under human approval. Integration with 1C, ORIS or Balance is confirmed only after aiNOW checks the client's actual system and access.",
+      "aiOFFICE is an AI office assistant for Georgian companies. It gathers tasks from the channels the team already uses, assigns owners and deadlines, organizes documents and approvals, follows up after meetings, and prepares clear status reports while people keep control of important decisions.",
   },
 } as const;
 

@@ -2,7 +2,7 @@
   "seo": {
     "contact": {
       "title": "Contact aiOFFICE",
-      "description": "Contact aiNOW to discuss one aiOFFICE process for orders, documents, approvals, or RS.ge waybills."
+      "description": "Contact aiNOW to organize office tasks, email, documents, approvals, reminders, and reports with aiOFFICE."
     },
     "notFound": {
       "title": "404, page not found",
@@ -55,59 +55,59 @@
   },
   "product": {
     "seo": {
-      "title": "aiOFFICE: orders and documents in one controlled process",
-      "description": "aiOFFICE turns incoming orders into checked drafts, routes them for human approval, and keeps records aligned across RS.ge and accounting tools."
+      "title": "aiOFFICE: an AI office assistant for everyday work",
+      "description": "aiOFFICE collects tasks, assigns owners and deadlines, organizes documents and approvals, follows up after meetings, and prepares office reports."
     },
     "hero": {
-      "lead": "Stop retyping the",
+      "lead": "Put office work",
       "taglinePrefix": "AI that",
-      "taglineWorks": "moves office work",
-      "typewriterWords": "orders,waybills,invoices,approvals,reports",
-      "typewriterPrefill": "orders",
-      "ctaResults": "See the order flow",
-      "ctaCall": "Discuss a process",
-      "commitment": "aiNOW maps one process, defines the approval points, and validates the result with the team before wider use.",
-      "audience": "For teams handling orders, documents, approvals and routine reconciliation.",
-      "sub": "A Viber order becomes a checked draft. A person approves it before any customer, accounting or tax action is ready.",
-      "signedBy": "aiNOW reviews the process on your data, configures the workflow, and documents the handover."
+      "taglineWorks": "keeps the office moving",
+      "typewriterWords": "tasks,deadlines,documents,approvals,reports",
+      "typewriterPrefill": "tasks",
+      "ctaResults": "See the office flow",
+      "ctaCall": "Discuss your routine",
+      "commitment": "aiNOW maps the team's real routine, owners and approval points before aiOFFICE starts acting.",
+      "audience": "For teams losing time between email, chats, documents, meetings, spreadsheets, and reminders.",
+      "sub": "Tasks arrive from different places. aiOFFICE gathers them, assigns an owner and deadline, reminds the team, and shows the manager what is done and what is stuck.",
+      "signedBy": "aiNOW configures aiOFFICE around your rules and keeps important decisions under human control."
     },
     "work": {
       "eyebrow": "How it works",
       "headingPre": "Six clear steps.",
-      "headingAccent": "One controlled process at a time.",
-      "s1Title": "Map the real process",
-      "s1Tag": "inputs, owners and exceptions",
-      "s1Desc": "aiNOW follows the work from the first message to the final record and identifies every manual handoff.",
-      "s2Title": "Choose one workflow",
-      "s2Tag": "clear scope and result",
-      "s2Desc": "The first scope covers one repeatable process, its source data, its destination and the result to review.",
-      "s3Title": "Define safe states",
-      "s3Tag": "draft, approval and ready",
-      "s3Desc": "Each step has a visible state. Customer, money and tax actions remain drafts until an authorised person approves them.",
-      "s4Title": "Connect the tools",
-      "s4Tag": "Viber, RS.ge and accounting",
-      "s4Desc": "Available interfaces and file exchanges are checked before the workflow is configured. Unsupported connections stay outside the scope.",
-      "s5Title": "Test normal and unclear cases",
-      "s5Tag": "examples from the real process",
-      "s5Desc": "Clear inputs, incomplete photos, mismatched records and approval paths are tested before routine use.",
-      "s6Title": "Document and maintain",
-      "s6Tag": "ownership stays visible",
-      "s6Desc": "aiNOW records the workflow, access rules and support boundary so changes can be reviewed without hiding operational risk."
+      "headingAccent": "From scattered requests to a clear working day.",
+      "s1Title": "Collect every task",
+      "s1Tag": "email, chats and forms",
+      "s1Desc": "Requests stop disappearing between channels. aiOFFICE turns each one into a visible task in a single queue.",
+      "s2Title": "Assign an owner and deadline",
+      "s2Tag": "no task without responsibility",
+      "s2Desc": "Approved rules route the task to the right person, set a deadline, and show who is responsible.",
+      "s3Title": "Keep documents organized",
+      "s3Tag": "one current version",
+      "s3Desc": "Files are attached to the right task, the current version stays visible, and missing information is requested before work continues.",
+      "s4Title": "Move approvals forward",
+      "s4Tag": "reminders without chasing people",
+      "s4Desc": "aiOFFICE reminds the approver, records the decision, and escalates an overdue step instead of letting it disappear.",
+      "s5Title": "Turn meetings into action",
+      "s5Tag": "decisions, tasks and follow-up",
+      "s5Desc": "Meeting notes become assigned next steps, so agreements are not forgotten after the call ends.",
+      "s6Title": "Show the manager what is stuck",
+      "s6Tag": "clear daily and weekly reports",
+      "s6Desc": "aiOFFICE prepares a short summary of completed, overdue, waiting, and blocked work without manual spreadsheet reporting."
     },
     "faq": {
       "headingPre": "Five questions",
-      "headingAccent": "before office automation starts.",
-      "subtitle": "How aiOFFICE reduces manual work and where approval stays.",
+      "headingAccent": "before an AI office assistant starts.",
+      "subtitle": "What aiOFFICE organizes, what it connects to, and what stays under your control.",
       "q1": "What is <brand></brand>?",
-      "a1": "aiOFFICE is aiNOW's office automation product. It connects orders, waybills, invoices, approvals, and reports into one controlled process.",
+      "a1": "aiOFFICE is aiNOW's AI office assistant. It organizes tasks, deadlines, documents, approvals, meeting follow-ups, reminders, and reports in one visible workflow.",
       "q2": "Which work does aiOFFICE fix?",
-      "a2": "aiOFFICE fits companies where orders are scattered across Viber, WhatsApp, email, or spreadsheets and then copied by hand into accounting systems.",
-      "q3": "Does it connect to RS.ge, 1C, or ORIS?",
-      "a3": "Integration depends on your access and current system. In the safe mode, aiOFFICE creates a draft first and final actions require approval.",
-      "q4": "Where does a human approve?",
-      "a4": "A human approves steps that change money, stock, tax documents, or customer obligations. That is part of the safety design.",
+      "a2": "It fits teams where requests get lost, deadlines are missed, documents have several versions, approvals stall, meeting decisions are forgotten, and reports are assembled by hand.",
+      "q3": "Which tools can aiOFFICE connect to?",
+      "a3": "Depending on access, aiOFFICE can work with email, calendars, cloud storage, forms, spreadsheets, task systems, and internal business software. aiNOW confirms each connection first.",
+      "q4": "What stays under human control?",
+      "a4": "People approve sensitive decisions, payments, external messages, access changes, and unusual cases. aiOFFICE handles the routine around those decisions.",
       "q5": "What result does the business get?",
-      "a5": "The business gets less manual copying, fewer lost orders, and a process that shows who approved what, when, and why.",
+      "a5": "The business gets fewer lost tasks, clearer responsibility, faster approvals, current documents, automatic reminders, and a manager view of what needs attention.",
       "q6": "Can it prepare RS.ge waybills and invoices?",
       "a6": "Supported data can be used to prepare document drafts. An authorised person reviews the draft before submission or posting.",
       "q7": "Where is company data stored?",
@@ -128,15 +128,15 @@
       "a14": "aiOFFICE covers internal workflows. aiDOCS handles document-heavy work, aiSTAFF supports chat, and aiCALL supports phone workflows."
     },
     "cta": {
-      "heading": "Show aiNOW one repetitive process",
-      "subtitle": "Leave a contact number and a short description. aiNOW will review whether the process has a clear, safe automation path.",
+      "heading": "Show aiNOW where office work gets stuck",
+      "subtitle": "Leave a contact number. aiNOW will map the routine and show what aiOFFICE can collect, assign, remind, approve, and report.",
       "phoneLabel": "Phone number",
       "phoneSubmit": "Request a call",
       "phoneNote": "A specialist will review the request",
       "orWrite": "Or contact aiNOW:"
     },
     "wordmark": {
-      "line": "Nobody re-types anything."
+      "line": "Every task has an owner, a deadline, and a visible result."
     },
     "flow": {
       "eyebrow": "Order workflow",
@@ -303,51 +303,51 @@
     },
     "capabilities": {
       "eyebrow": "Five capabilities",
-      "title": "What aiOFFICE handles in daily operations",
-      "intro": "Orders, checks, and documents without unnecessary manual copying.",
+      "title": "What aiOFFICE fixes in everyday office work",
+      "intro": "Ten common office problems are reduced through five simple working systems.",
       "outcomeLabel": "Business result",
       "items": {
         "1": {
-          "title": "Turns a message into a processed order",
-          "description": "aiOFFICE reads the customer, products, and quantities from a Viber message and prepares the document drafts.",
-          "result": "The team does not need to copy the order by hand."
+        "title": "No lost requests or unclear owners",
+        "description": "Collects tasks from different channels and assigns each task to a responsible person with a deadline.",
+        "result": "Every request has a visible owner and next step."
         },
         "2": {
-          "title": "Stops uncertain data",
-          "description": "If a photo or quantity is unclear, the process pauses and asks an employee for the correct value.",
-          "result": "Uncertain data does not quietly enter a document."
+        "title": "No missed deadlines or forgotten follow-ups",
+        "description": "Sends reminders, escalates overdue work, and turns meeting decisions into assigned follow-up tasks.",
+        "result": "Important work does not disappear after a meeting or busy day."
         },
         "3": {
-          "title": "Shows the cost of manual work",
-          "description": "Order volume, processing time, and current team cost appear in one simple view.",
-          "result": "The business sees which process is worth automating first."
+        "title": "No document chaos or wrong versions",
+        "description": "Keeps files with the correct task, shows the current version, and requests missing information.",
+        "result": "The team works from the same document and sees its status."
         },
         "4": {
-          "title": "Checks records against each other",
-          "description": "The order, stock, waybill, and accounting entry must match before the process continues.",
-          "result": "A mismatch is found and corrected before sending."
+        "title": "No stalled approvals or status chasing",
+        "description": "Routes approvals, records decisions, reminds the right person, and shows where work is blocked.",
+        "result": "Managers see the bottleneck without asking every employee."
         },
         "5": {
-          "title": "Plans automation by priority",
-          "description": "aiNOW reviews the business process and shows which repeated task should be simplified first.",
-          "result": "The business starts with the clearest and most useful process."
+        "title": "No manual weekly reports or repeated searching",
+        "description": "Builds daily and weekly summaries and finds approved internal information from the connected workspace.",
+        "result": "The manager gets a clear update without another spreadsheet."
         }
       }
     },
     "heroStory": {
       "badge": "Illustrative demo",
       "inputLabel": "The business request",
-      "input": "Process this Viber order and leave the documents ready for approval.",
+    "input": "Collect today's requests, assign owners, and prepare reminders for everything due tomorrow.",
       "bridgeLabel": "iAI understood",
-      "bridge": "iAI reads the customer, products, and quantities from the message and sends the task to aiOFFICE.",
+    "bridge": "iAI turns the manager's request into office rules and sends the task to aiOFFICE.",
       "productLabel": "aiOFFICE works",
-      "productAction": "Checks the order and prepares the required documents.",
-      "detailOne": "Products and quantities checked against the catalogue and stock",
-      "detailTwo": "Waybill and invoice drafts are ready",
+    "productAction": "Collects tasks, assigns owners, and checks deadlines.",
+    "detailOne": "12 requests collected from email, forms, and team chats",
+    "detailTwo": "Owners assigned · 3 reminders prepared · 1 blocked task flagged",
       "resultLabel": "Visible result",
-      "result": "Order processed · documents ready for approval",
+    "result": "Today's office plan is ready and every task has a next step",
       "businessLabel": "What the business gets",
-      "businessValue": "The team does not need to copy the order by hand. An employee approves everything before sending.",
+    "businessValue": "Nothing gets lost between channels. The team sees who does what and the manager sees what needs attention.",
       "replay": "Replay"
     },
     "proof": {
