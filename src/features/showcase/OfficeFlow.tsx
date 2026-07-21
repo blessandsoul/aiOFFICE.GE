@@ -102,7 +102,7 @@ export function OfficeFlow() {
               <Ico name="solar:chat-round-dots-bold-duotone" className="h-5 w-5" />
             </span>
             <div className="min-w-0 flex-1">
-              <span className="block text-[11px] font-medium text-white/50">23:40 · Viber</span>
+              <span className="block text-[11px] font-medium text-white/50">09:10 · Email</span>
               <span className="mt-1 block text-pretty text-[14px] font-semibold leading-snug text-white/90">
                 {t('s1sub')}
               </span>

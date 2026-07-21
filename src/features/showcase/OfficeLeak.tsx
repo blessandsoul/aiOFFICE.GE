@@ -16,10 +16,10 @@ type DemoController = {
 const LEAK_CYCLE_MS = 7000;
 const LEAK_DEMO_STAGES = [0, 1, 2, 3];
 const LEAK_DEMO_FRAMES = [
-  { orders: 20, viber: 20, retype: 25, errors: 1, ticket: 80, fines: 0 },
-  { orders: 35, viber: 35, retype: 45, errors: 2, ticket: 120, fines: 600 },
-  { orders: 50, viber: 45, retype: 60, errors: 3, ticket: 150, fines: 1200 },
-  { orders: 60, viber: 55, retype: 70, errors: 4, ticket: 180, fines: 1800 },
+  { orders: 20, channelShare: 20, retype: 25, errors: 1, ticket: 80, fines: 0 },
+  { orders: 35, channelShare: 35, retype: 45, errors: 2, ticket: 120, fines: 600 },
+  { orders: 50, channelShare: 45, retype: 60, errors: 3, ticket: 150, fines: 1200 },
+  { orders: 60, channelShare: 55, retype: 70, errors: 4, ticket: 180, fines: 1800 },
 ];
 
 export function OfficeLeak() {
@@ -28,7 +28,7 @@ export function OfficeLeak() {
   const reduced = Boolean(useReducedMotion());
 
   const [orders, setOrders] = useState(LEAK_DEMO_FRAMES[0].orders);
-  const [viber, setViber] = useState(LEAK_DEMO_FRAMES[0].viber);
+  const [channelShare, setChannelShare] = useState(LEAK_DEMO_FRAMES[0].channelShare);
   const [retype, setRetype] = useState(LEAK_DEMO_FRAMES[0].retype);
   const [errors, setErrors] = useState(LEAK_DEMO_FRAMES[0].errors);
   const [ticket, setTicket] = useState(LEAK_DEMO_FRAMES[0].ticket);
@@ -43,7 +43,7 @@ export function OfficeLeak() {
       if (manualRef.current) return;
       const frame = LEAK_DEMO_FRAMES[index];
       setOrders(frame.orders);
-      setViber(frame.viber);
+      setChannelShare(frame.channelShare);
       setRetype(frame.retype);
       setErrors(frame.errors);
       setTicket(frame.ticket);
@@ -88,7 +88,7 @@ export function OfficeLeak() {
   };
 
   const perMonth = orders * 30;
-  const messy = perMonth * (viber / 100);
+  const messy = perMonth * (channelShare / 100);
   const retyped = messy * (retype / 100);
   const wrong = retyped * (errors / 100);
   const lostGel = wrong * ticket;
@@ -104,7 +104,7 @@ export function OfficeLeak() {
         ref={visibilityRef}
         data-landing-demo="office-leak-calculator"
         data-demo-id="office-leak-calculator"
-        data-demo-detail={`${orders}-${viber}-${retype}-${errors}-${ticket}-${fines}`}
+        data-demo-detail={`${orders}-${channelShare}-${retype}-${errors}-${ticket}-${fines}`}
         aria-live="off"
         className="grid min-w-0 gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(300px,420px)] lg:gap-14"
       >
@@ -132,7 +132,7 @@ export function OfficeLeak() {
           <div className="mt-8 grid min-w-0 gap-6 sm:grid-cols-2">
             <Range label={t('orders')} value={orders} min={5} max={500} step={5} onChange={takeControl(setOrders)} />
             <Range label={t('ticket')} value={ticket} min={20} max={2000} step={10} onChange={takeControl(setTicket)} suffix=" GEL" />
-            <Range label={t('viber')} value={viber} min={0} max={100} step={5} onChange={takeControl(setViber)} suffix="%" />
+            <Range label={t('channelShare')} value={channelShare} min={0} max={100} step={5} onChange={takeControl(setChannelShare)} suffix="%" />
             <Range label={t('retype')} value={retype} min={0} max={100} step={5} onChange={takeControl(setRetype)} suffix="%" />
             <Range label={t('errors')} value={errors} min={0} max={20} step={1} onChange={takeControl(setErrors)} suffix="%" />
             <Range label={t('fines')} value={fines} min={0} max={20000} step={100} onChange={takeControl(setFines)} suffix=" GEL" />
