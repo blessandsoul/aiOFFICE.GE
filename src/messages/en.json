@@ -59,7 +59,9 @@
       "description": "aiOFFICE collects tasks, assigns owners and deadlines, organizes documents and approvals, follows up after meetings, and prepares office reports."
     },
     "hero": {
-      "lead": "Put office work",
+      "owner": "Your",
+      "role": "office manager",
+      "lead": "keeps track of",
       "taglinePrefix": "AI that",
       "taglineWorks": "keeps the office moving",
       "typewriterWords": "tasks,deadlines,documents,approvals,reports",
