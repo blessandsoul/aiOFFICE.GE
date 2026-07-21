@@ -9,6 +9,8 @@ const COPY_NAMESPACES = [
   'work',
   'faq',
   'cta',
+  'capabilities',
+  'heroStory',
   'flow',
   'exceptionGuard',
   'leak',
@@ -17,6 +19,7 @@ const COPY_NAMESPACES = [
   'proof',
 ];
 const EXPECTED_KEYS = {
+  capabilities: ['eyebrow', 'title', 'intro', 'outcomeLabel', 'items'],
   flow: [
     'eyebrow',
     'heading',
@@ -105,6 +108,19 @@ test('all rewritten product namespaces keep locale key parity', async () => {
         Object.keys(english.product[namespace]).sort(),
         `${locale} product.${namespace} keys differ from English`,
       );
+    }
+  }
+});
+
+test('capabilities contain exactly five complete business outcomes in every locale', async () => {
+  for (const locale of LOCALES) {
+    const messages = await loadLocale(locale);
+    const items = messages.product.capabilities.items;
+
+    assert.deepEqual(Object.keys(items), ['1', '2', '3', '4', '5']);
+    for (const item of Object.values(items)) {
+      assert.deepEqual(Object.keys(item).sort(), ['description', 'result', 'title']);
+      assert.ok(Object.values(item).every((value) => typeof value === 'string' && value.trim()));
     }
   }
 });

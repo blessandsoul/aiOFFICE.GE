@@ -5,6 +5,18 @@ import test from 'node:test';
 import * as flowModels from './office-demo-models.mjs';
 
 const source = readFileSync(new URL('./OfficeFlow.tsx', import.meta.url), 'utf8');
+const landingShowcaseSource = readFileSync(
+  new URL('../home/components/LandingShowcase.tsx', import.meta.url),
+  'utf8',
+);
+const productCapabilitiesSource = readFileSync(
+  new URL('../home/components/ProductCapabilities.tsx', import.meta.url),
+  'utf8',
+);
+const heroWorkflowSource = readFileSync(
+  new URL('../home/components/HeroWorkflowStory.tsx', import.meta.url),
+  'utf8',
+);
 
 test('office flow has five approval-safe stages', () => {
   assert.deepEqual(flowModels.FLOW_STAGES, [
@@ -41,4 +53,18 @@ test('office flow uses bundled semantic icons instead of raw UI glyphs', () => {
   assert.match(source, /solar:chat-round-dots-bold-duotone/u);
   assert.match(source, /solar:text-bold-duotone/u);
   assert.match(source, /solar:shield-check-bold-duotone/u);
+});
+
+test('landing keeps one hero demo and exposes five static office capabilities', () => {
+  assert.match(landingShowcaseSource, /useTranslations\('product\.capabilities'\)/u);
+  assert.match(landingShowcaseSource, /<ProductCapabilities/u);
+  assert.equal(landingShowcaseSource.match(/solar:[a-z0-9-]+/gu)?.length, 5);
+  assert.doesNotMatch(
+    landingShowcaseSource,
+    /OfficeFlow|OfficeExceptionGuard|OfficeLeak|OfficeReconciliationGuard|OfficeMap/u,
+  );
+  assert.doesNotMatch(landingShowcaseSource, /data-landing-demo/u);
+  assert.match(productCapabilitiesSource, /items\.map\(\(item, index\)/u);
+  assert.match(productCapabilitiesSource, /data-feature-section="true"/u);
+  assert.equal(heroWorkflowSource.match(/data-landing-demo=/gu)?.length, 1);
 });

@@ -148,7 +148,10 @@ test('timeline reaches the final stage at exactly 7200ms', () => {
   player.play();
   assert.deepEqual(seen, ['received']);
 
-  clock.advance(7199);
+  clock.advance(900);
+  assert.deepEqual(seen, ['received', 'uncertain']);
+
+  clock.advance(6299);
   assert.deepEqual(seen, ['received', 'uncertain', 'human-correction']);
 
   clock.advance(1);
@@ -166,7 +169,7 @@ test('replay resets the timeline and cleanup cancels pending stages', () => {
   });
 
   player.play();
-  clock.advance(2400);
+  clock.advance(900);
   player.replay();
   assert.deepEqual(seen, ['checking', 'blocked', 'checking']);
   assert.equal(clock.pendingCount, 3);

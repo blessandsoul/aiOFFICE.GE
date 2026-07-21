@@ -120,10 +120,13 @@ export function createTimelinePlayer({
     }
 
     onStage(stages[0]);
-    const interval = durationMs / (stages.length - 1);
-    timers = stages.slice(1).map((stage, index) =>
-      schedule(() => onStage(stage), interval * (index + 1)),
-    );
+    const firstChangeAt = Math.min(900, durationMs);
+    const remainingTransitions = stages.length - 1;
+    timers = stages.slice(1).map((stage, index) => {
+      const progress = remainingTransitions === 1 ? 1 : index / (remainingTransitions - 1);
+      const at = firstChangeAt + (durationMs - firstChangeAt) * progress;
+      return schedule(() => onStage(stage), at);
+    });
   }
 
   return { play, replay: play, cancel };

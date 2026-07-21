@@ -57,27 +57,34 @@ export function OfficeExceptionGuard() {
   const isDone = frame.canContinue;
 
   return (
-    <SectionContainer className="py-20 md:py-28">
+    <SectionContainer className="py-16 md:py-24 lg:py-28">
       <div
         ref={visibilityRef}
+        data-landing-demo="office-exception-guard"
+        data-demo-id="office-exception-guard"
+        data-demo-detail={stage}
+        aria-live="off"
         className="grid gap-10 lg:grid-cols-[minmax(280px,380px)_1fr] lg:gap-14"
       >
         <div>
-          <span className="text-[12px] font-semibold tracking-wide text-neutral-900/40">
+          <span className="text-[12px] font-semibold tracking-wide text-[#667085]">
             {t('eyebrow')}
           </span>
-          <h2 className="mt-4 text-balance font-display text-3xl font-extrabold leading-[1.1] tracking-tight text-neutral-900 md:text-4xl">
+          <h2 className="mt-4 text-balance font-display text-[30px] font-extrabold leading-[1.1] tracking-tight text-[#101828] md:text-[36px] md:leading-[1.12]">
             {t('heading')}
           </h2>
-          <p className="mt-3 text-pretty text-[15px] leading-relaxed text-[#525252]">
+          <p className="mt-3 text-pretty text-[15px] leading-relaxed text-[#4B5563]">
             {t('subtitle')}
+          </p>
+          <p data-demo-outcome className="mt-6">
+            {t('outcome')}
           </p>
         </div>
 
         <div className="overflow-hidden rounded-3xl bg-[#0e0e11] p-3 shadow-[0_24px_70px_rgba(14,14,17,0.12)] sm:p-5">
           <div className="grid gap-3 md:grid-cols-[minmax(180px,0.8fr)_1.2fr]">
             <div className="rounded-2xl bg-white/[0.06] p-3">
-              <span className="text-[11px] font-semibold tracking-wide text-white/45">
+              <span className="text-[11px] font-semibold tracking-wide text-[#A3A3A3]">
                 {t('poorPhoto')}
               </span>
               <div
@@ -102,7 +109,7 @@ export function OfficeExceptionGuard() {
             <div className="flex min-w-0 flex-col rounded-2xl bg-white p-4 sm:p-5">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <span className="text-[11px] font-semibold tracking-wide text-neutral-900/40">
+                  <span className="text-[11px] font-semibold tracking-wide text-[#667085]">
                     {t('quantity')}
                   </span>
                   <motion.p
@@ -123,7 +130,7 @@ export function OfficeExceptionGuard() {
                         }
                         className={cn(
                           'h-10 w-10',
-                          stage === 'uncertain' ? 'text-[#d97706]' : 'text-neutral-900/25',
+                          stage === 'uncertain' ? 'text-[#d97706]' : 'text-[#667085]',
                         )}
                       />
                     )}
@@ -142,14 +149,18 @@ export function OfficeExceptionGuard() {
               </div>
 
               <div className="mt-4 min-h-12 rounded-xl bg-[#fafafa] px-3 py-2.5 shadow-[0_0_0_1px_rgba(0,0,0,0.06)]">
-                <span className="block text-[11px] font-semibold tracking-wide text-neutral-900/40">
+                <span className="block text-[11px] font-semibold tracking-wide text-[#667085]">
                   {hasHumanValue ? t('humanCheck') : t('uncertain')}
                 </span>
-                {hasHumanValue && (
-                  <span className="mt-1 block text-[13px] font-semibold text-neutral-900">
-                    {t('corrected')}
-                  </span>
-                )}
+                <span
+                  aria-hidden={!hasHumanValue}
+                  className={cn(
+                    'mt-1 block min-h-[20px] text-[13px] font-semibold text-neutral-900',
+                    !hasHumanValue && 'invisible',
+                  )}
+                >
+                  {t('corrected')}
+                </span>
               </div>
 
               <ol className="mt-5 grid grid-cols-4 gap-1.5" aria-label={t('eyebrow')}>
@@ -164,7 +175,7 @@ export function OfficeExceptionGuard() {
                           reached ? 'bg-[var(--brand)]' : 'bg-neutral-900/10',
                         )}
                       />
-                      <span className="mt-2 block text-[10px] leading-tight text-neutral-900/50">
+                      <span className="mt-2 block text-[10px] leading-tight text-[#667085]">
                         {t(STAGE_LABELS[index])}
                       </span>
                     </li>
@@ -173,18 +184,30 @@ export function OfficeExceptionGuard() {
               </ol>
 
               <div className="mt-auto flex flex-col gap-3 pt-5 sm:flex-row sm:items-center sm:justify-between">
-                <p
-                  className={cn(
-                    'text-pretty text-[13px] font-semibold leading-snug',
-                    isDone ? 'text-[#065f46]' : 'text-[#92400e]',
-                  )}
-                  aria-live="polite"
-                >
-                  {isDone ? t('outcome') : t('held')}
+                <p className="grid min-h-[56px] text-pretty text-[13px] font-semibold leading-snug" aria-live="off">
+                  <span
+                    aria-hidden={isDone}
+                    className={cn(
+                      'col-start-1 row-start-1 text-[#92400e] transition-opacity duration-200 ease-out motion-reduce:transition-none',
+                      isDone ? 'opacity-0' : 'opacity-100',
+                    )}
+                  >
+                    {t('held')}
+                  </span>
+                  <span
+                    aria-hidden={!isDone}
+                    className={cn(
+                      'col-start-1 row-start-1 text-[#065f46] transition-opacity duration-200 ease-out motion-reduce:transition-none',
+                      isDone ? 'opacity-100' : 'opacity-0',
+                    )}
+                  >
+                    {t('outcome')}
+                  </span>
                 </p>
                 <button
                   type="button"
                   onClick={() => controllerRef.current?.replay()}
+                  data-demo-replay
                   className="min-h-[44px] shrink-0 rounded-xl bg-neutral-900 px-5 text-[13px] font-bold text-white transition-transform active:scale-[0.96] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2"
                 >
                   {t('replay')}

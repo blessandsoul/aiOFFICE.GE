@@ -2,7 +2,7 @@
   "seo": {
     "contact": {
       "title": "Contact aiOFFICE",
-      "description": "Talk to us about automating one process in your company: orders, documents, approvals, RS.ge waybills."
+      "description": "Contact aiNOW to discuss one aiOFFICE process for orders, documents, approvals, or RS.ge waybills."
     },
     "notFound": {
       "title": "404, page not found",
@@ -34,7 +34,11 @@
     "showcase": "See the workflow",
     "process": "How it works",
     "faq": "Questions",
-    "cta": "Fix a process"
+    "cta": "Fix a process",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "switchLanguage": "Switch language",
+    "homeLabel": "{brand} home"
   },
   "landingFooter": {
     "company": "AI NOW LLC, Tbilisi, Georgia",
@@ -51,7 +55,7 @@
   },
   "product": {
     "seo": {
-      "title": "aiOFFICE | Orders, documents and approvals in one controlled flow",
+      "title": "aiOFFICE: orders and documents in one controlled process",
       "description": "aiOFFICE turns incoming orders into checked drafts, routes them for human approval, and keeps records aligned across RS.ge and accounting tools."
     },
     "hero": {
@@ -91,19 +95,19 @@
       "s6Desc": "aiNOW records the workflow, access rules and support boundary so changes can be reviewed without hiding operational risk."
     },
     "faq": {
-      "headingPre": "Practical questions,",
-      "headingAccent": "clear answers.",
-      "subtitle": "Scope, safety, data and day-to-day ownership.",
-      "q1": "What makes <brand></brand> different from a generic automation demo?",
-      "a1": "The work starts with one real process, clear approval rules and exception tests. The result is reviewed on company data before wider use.",
-      "q2": "How is the price set?",
-      "a2": "Pricing follows the actual process, systems and support boundary. aiNOW provides a written scope and price after the workflow review.",
-      "q3": "How is the delivery timeline set?",
-      "a3": "The timeline is agreed after the source data, integrations, approval roles and exception cases are known.",
-      "q4": "Can it work with Georgian messages?",
-      "a4": "Sample Georgian messages are evaluated during discovery. Unclear text or handwriting is routed to a person instead of being guessed.",
-      "q5": "Can it connect to 1C, ORIS or Balance?",
-      "a5": "The exact installation and available interface are checked before scope. A file exchange is used only when it is suitable and documented.",
+      "headingPre": "Five questions",
+      "headingAccent": "before office automation starts.",
+      "subtitle": "How aiOFFICE reduces manual work and where approval stays.",
+      "q1": "What is <brand></brand>?",
+      "a1": "aiOFFICE is aiNOW's office automation product. It connects orders, waybills, invoices, approvals, and reports into one controlled process.",
+      "q2": "Which work does aiOFFICE fix?",
+      "a2": "aiOFFICE fits companies where orders are scattered across Viber, WhatsApp, email, or spreadsheets and then copied by hand into accounting systems.",
+      "q3": "Does it connect to RS.ge, 1C, or ORIS?",
+      "a3": "Integration depends on your access and current system. In the safe mode, aiOFFICE creates a draft first and final actions require approval.",
+      "q4": "Where does a human approve?",
+      "a4": "A human approves steps that change money, stock, tax documents, or customer obligations. That is part of the safety design.",
+      "q5": "What result does the business get?",
+      "a5": "The business gets less manual copying, fewer lost orders, and a process that shows who approved what, when, and why.",
       "q6": "Can it prepare RS.ge waybills and invoices?",
       "a6": "Supported data can be used to prepare document drafts. An authorised person reviews the draft before submission or posting.",
       "q7": "Where is company data stored?",
@@ -216,7 +220,8 @@
       "d1": "Basic setup",
       "d2": "Needs integration",
       "d3": "Needs discovery",
-      "moves": "Control point",
+    "moves": "Control point",
+    "outcome": "The business immediately sees which process is worth automating first.",
       "i1": "Distribution",
       "i2": "Retail chain",
       "i3": "Clinic",
@@ -295,6 +300,55 @@
       "i6p5m": "Consistent shift records",
       "i6p6": "Prepare a menu margin summary",
       "i6p6m": "Menu review input"
+    },
+    "capabilities": {
+      "eyebrow": "Five capabilities",
+      "title": "What aiOFFICE handles in daily operations",
+      "intro": "Orders, checks, and documents without unnecessary manual copying.",
+      "outcomeLabel": "Business result",
+      "items": {
+        "1": {
+          "title": "Turns a message into a processed order",
+          "description": "aiOFFICE reads the customer, products, and quantities from a Viber message and prepares the document drafts.",
+          "result": "The team does not need to copy the order by hand."
+        },
+        "2": {
+          "title": "Stops uncertain data",
+          "description": "If a photo or quantity is unclear, the process pauses and asks an employee for the correct value.",
+          "result": "Uncertain data does not quietly enter a document."
+        },
+        "3": {
+          "title": "Shows the cost of manual work",
+          "description": "Order volume, processing time, and current team cost appear in one simple view.",
+          "result": "The business sees which process is worth automating first."
+        },
+        "4": {
+          "title": "Checks records against each other",
+          "description": "The order, stock, waybill, and accounting entry must match before the process continues.",
+          "result": "A mismatch is found and corrected before sending."
+        },
+        "5": {
+          "title": "Plans automation by priority",
+          "description": "aiNOW reviews the business process and shows which repeated task should be simplified first.",
+          "result": "The business starts with the clearest and most useful process."
+        }
+      }
+    },
+    "heroStory": {
+      "badge": "Illustrative demo",
+      "inputLabel": "The business request",
+      "input": "Process this Viber order and leave the documents ready for approval.",
+      "bridgeLabel": "iAI understood",
+      "bridge": "iAI reads the customer, products, and quantities from the message and sends the task to aiOFFICE.",
+      "productLabel": "aiOFFICE works",
+      "productAction": "Checks the order and prepares the required documents.",
+      "detailOne": "Products and quantities checked against the catalogue and stock",
+      "detailTwo": "Waybill and invoice drafts are ready",
+      "resultLabel": "Visible result",
+      "result": "Order processed · documents ready for approval",
+      "businessLabel": "What the business gets",
+      "businessValue": "The team does not need to copy the order by hand. An employee approves everything before sending.",
+      "replay": "Replay"
     },
     "proof": {
       "s1": "Order details extracted and checked",

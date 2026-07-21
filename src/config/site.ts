@@ -68,7 +68,7 @@ export const SITE = {
       "Back-office process automation for Georgian companies: orders, documents, approvals, reports, RS.ge waybills, and the glue to 1C, ORIS or Balance. It is not a customer-facing chatbot and it is not a consultancy selling a strategy deck.",
     serviceType: "Back-office automation for Georgian companies, one process at a time",
     audienceName:
-      "Georgian companies of 5 to 50 people: distribution, retail chains, logistics, clinics, construction, restaurant groups",
+      "Georgian companies in distribution, retail, logistics, healthcare, construction and hospitality",
     areaServed: "GE",
     knowsAbout: [
       "Business process automation",
@@ -82,25 +82,25 @@ export const SITE = {
       "Internal copilot",
     ],
     features: [
-      "An on-site half-day ops X-ray that names the one process worth automating first",
-      "One process, fixed scope, fixed date, with a money number attached before we start",
-      "RS.ge waybill to inventory to invoice, automated end to end",
-      "Glue to the accounting system you already run: 1C, ORIS or Balance",
-      "We run it, and we are the ones who fix it when it breaks",
+      "A review that identifies the first process worth automating",
+      "One process with an agreed scope, owner and approval point",
+      "Draft RS.ge waybills, inventory updates and invoices for review",
+      "Connection to 1C, ORIS or Balance after access and compatibility are checked",
+      "A visible activity trail for every automated step",
     ],
     boundary:
       "aiOFFICE is the inside of the company. If the whole job is turning a pile of documents into posted ledger rows, that is productized and it lives at aiDOCS.ge. Answering customers is aiSTAFF.ge for chat and aiCALL.ge for the phone.",
     limits: [
-      "We sell recovered revenue and avoided fines, not saved hours. A Georgian working hour costs about 14 GEL against roughly 38 dollars in the US, so an American hours-saved calculator produces a number that is simply false here.",
-      "We do not promise headcount reduction.",
-      "We do not do Georgian handwriting recognition.",
-      "We will not promise a 1C, ORIS or Balance integration before we have seen your actual installation. Every one of them is different.",
-      "We have shipped no automation yet, so we publish no results.",
+      "The business case is based on fewer lost orders, fewer data-entry mistakes and safer document handling. aiNOW does not reuse savings figures from another company.",
+      "aiNOW does not promise headcount reduction.",
+      "aiOFFICE does not include Georgian handwriting recognition.",
+      "aiNOW confirms a 1C, ORIS or Balance integration only after checking the client's installation and access.",
+      "Every result is measured on the client's own process. aiNOW publishes no borrowed benchmark as proof.",
     ],
     commitment:
-      "We name one number in writing before we start. If it has not moved 30 days after launch, we keep working at no charge until it does.",
+      "Before work starts, aiNOW writes down the process, the approval boundary and the business result that will be measured.",
     summary:
-      "aiOFFICE automates the back office of a Georgian company one process at a time: orders, documents, approvals, reports, RS.ge waybills, and the glue to whatever accounting system is already running. It deliberately refuses the American framing of this product. Labour in Georgia costs roughly 14 GEL an hour against about 38 dollars in the United States, so a pitch built on saved hours is around seven times weaker here and closes nobody. The argument is recovered revenue and avoided compliance fines instead. Built by the aiNOW agency in Tbilisi.",
+      "aiOFFICE automates one back-office process at a time for Georgian companies. It connects orders, documents, approvals, reports and RS.ge drafts while keeping financial and tax actions under human approval. Integration with 1C, ORIS or Balance is confirmed only after aiNOW checks the client's actual system and access.",
   },
 } as const;
 

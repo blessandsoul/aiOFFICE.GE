@@ -10,7 +10,6 @@ const SHOWCASE_COMPONENTS = [
   'OfficeLeak.tsx',
   'OfficeReconciliationGuard.tsx',
   'OfficeMap.tsx',
-  'HeroProof.tsx',
 ];
 const RAW_STATUS_GLYPH = /(?:['"][—–?✓✔✕→←]['"]|>\s*[—–?✓✔✕→←]\s*<)/u;
 
@@ -124,8 +123,11 @@ test('office stories start at 35 percent visibility and repeat after a 2 second 
 
   observed.emit(harness.target, 0.35, true);
   assert.deepEqual(harness.calls, ['play']);
-  assert.equal(harness.timers.pending()[0][1].delay, 9000);
+  assert.equal(harness.timers.pending()[0][1].delay, 7000);
 
+  harness.timers.fire(harness.timers.pending()[0][0]);
+  assert.deepEqual(harness.calls, ['play']);
+  assert.equal(harness.timers.pending()[0][1].delay, 2000);
   harness.timers.fire(harness.timers.pending()[0][0]);
   assert.deepEqual(harness.calls, ['play', 'stop', 'reset', 'play']);
 });
@@ -180,7 +182,7 @@ test('explicit replay releases manual ownership and restarts the visible loop', 
 
   assert.deepEqual(harness.calls, ['play', 'stop', 'stop', 'reset', 'play']);
   assert.equal(harness.timers.pending().length, 1);
-  assert.equal(harness.timers.pending()[0][1].delay, 9000);
+  assert.equal(harness.timers.pending()[0][1].delay, 7000);
 });
 
 test('all office stories use the shared visible loop and expose replay', () => {
@@ -191,6 +193,19 @@ test('all office stories use the shared visible loop and expose replay', () => {
     assert.match(source, /\.replay\(\)/u, `${component} must expose replay`);
     assert.doesNotMatch(source, /createVisibilityGate|setInterval/u);
   }
+
+  const heroAdapter = readFileSync(new URL('HeroProof.tsx', import.meta.url), 'utf8');
+  const heroWorkflow = readFileSync(
+    new URL('../home/components/HeroWorkflowStory.tsx', import.meta.url),
+    'utf8',
+  );
+  assert.match(heroAdapter, /HeroWorkflowStory/u);
+  assert.match(heroAdapter, /mode="orchestrated"/u);
+  assert.match(heroWorkflow, /createDemoLoop/u);
+  assert.match(heroWorkflow, /threshold:\s*0\.35/u);
+  assert.match(heroWorkflow, /holdMs:\s*2_000/u);
+  assert.match(heroWorkflow, /controllerRef\.current\?\.replay\(\)/u);
+  assert.doesNotMatch(heroWorkflow, /createVisibilityGate|setInterval/u);
 });
 
 test('all office stories use bundled icons instead of raw visitor status glyphs', () => {
@@ -206,6 +221,16 @@ test('all office stories use bundled icons instead of raw visitor status glyphs'
   );
   assert.match(exceptionSource, /import \{ Ico \} from '@\/components\/common\/Ico';/u);
   assert.match(exceptionSource, /<Ico/u);
+
+  const heroAdapter = readFileSync(new URL('HeroProof.tsx', import.meta.url), 'utf8');
+  const heroWorkflow = readFileSync(
+    new URL('../home/components/HeroWorkflowStory.tsx', import.meta.url),
+    'utf8',
+  );
+  assert.match(heroAdapter, /solar:settings-bold-duotone/u);
+  assert.match(heroWorkflow, /import \{ Ico \} from '@\/components\/common\/Ico';/u);
+  assert.doesNotMatch(`${heroAdapter}\n${heroWorkflow}`, RAW_STATUS_GLYPH);
+  assert.doesNotMatch(`${heroAdapter}\n${heroWorkflow}`, /from ['"]lucide-react['"]/u);
 });
 
 test('manual leak and map stories yield until an enabled explicit replay', () => {

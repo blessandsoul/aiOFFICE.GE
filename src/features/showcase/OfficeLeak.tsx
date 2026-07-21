@@ -98,19 +98,24 @@ export function OfficeLeak() {
   const fmt = (n: number) =>
     new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(Math.round(n));
 
-  const small = total < 900;
-
   return (
-    <SectionContainer className="py-20 md:py-28">
-      <div ref={visibilityRef} className="grid gap-10 lg:grid-cols-[1fr_minmax(300px,420px)] lg:gap-14">
-        <div>
-          <span className="text-[12px] font-semibold tracking-wide text-neutral-900/40">
+    <SectionContainer className="py-16 md:py-24 lg:py-28">
+      <div
+        ref={visibilityRef}
+        data-landing-demo="office-leak-calculator"
+        data-demo-id="office-leak-calculator"
+        data-demo-detail={`${orders}-${viber}-${retype}-${errors}-${ticket}-${fines}`}
+        aria-live="off"
+        className="grid min-w-0 gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(300px,420px)] lg:gap-14"
+      >
+        <div className="min-w-0">
+          <span className="text-[12px] font-semibold tracking-wide text-[#667085]">
             {t('eyebrow')}
           </span>
-          <h2 className="mt-4 max-w-lg text-balance font-display text-3xl font-extrabold leading-[1.1] tracking-tight text-neutral-900 md:text-4xl">
+          <h2 className="mt-4 max-w-lg text-balance font-display text-[30px] font-extrabold leading-[1.1] tracking-tight text-[#101828] md:text-[36px] md:leading-[1.12]">
             {t('heading')}
           </h2>
-          <p className="mt-3 max-w-xl text-pretty text-[15px] leading-relaxed text-[#525252]">
+          <p className="mt-3 max-w-xl text-pretty text-[15px] leading-relaxed text-[#4B5563]">
             {t('subtitle')}
           </p>
 
@@ -118,12 +123,13 @@ export function OfficeLeak() {
             type="button"
             onClick={replayDemo}
             data-manual={manual ? 'true' : 'false'}
-            className="mt-5 min-h-[44px] rounded-xl bg-neutral-900 px-5 text-[13px] font-bold text-white transition-transform active:scale-[0.97] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2"
+            data-demo-replay
+            className="mt-5 min-h-[44px] max-w-full rounded-xl bg-neutral-900 px-5 text-center text-[13px] font-bold text-white transition-transform active:scale-[0.96] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2"
           >
             {actions('again')}
           </button>
 
-          <div className="mt-8 grid gap-6 sm:grid-cols-2">
+          <div className="mt-8 grid min-w-0 gap-6 sm:grid-cols-2">
             <Range label={t('orders')} value={orders} min={5} max={500} step={5} onChange={takeControl(setOrders)} />
             <Range label={t('ticket')} value={ticket} min={20} max={2000} step={10} onChange={takeControl(setTicket)} suffix=" GEL" />
             <Range label={t('viber')} value={viber} min={0} max={100} step={5} onChange={takeControl(setViber)} suffix="%" />
@@ -133,23 +139,23 @@ export function OfficeLeak() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex min-w-0 flex-col gap-4">
           <div className="rounded-2xl bg-[#fafafa] p-5 shadow-[0_0_0_1px_rgba(0,0,0,0.06)]">
-            <span className="text-[12px] font-semibold tracking-wide text-neutral-900/40">
+            <span className="text-[12px] font-semibold tracking-wide text-[#4B5563]">
               {t('lost')}
             </span>
-            <p className="mt-2 font-display text-3xl font-extrabold tabular-nums leading-none text-neutral-900">
-              {fmt(lostGel)}
+            <p className="mt-2 flex min-w-0 flex-wrap items-baseline gap-1.5 font-display text-3xl font-extrabold tabular-nums leading-none text-neutral-900">
+              <span className="inline-block min-w-[7ch] text-right">{fmt(lostGel)}</span>
               <span className="ml-1.5 text-base font-bold text-[#737373]">{t('perMonth')}</span>
             </p>
           </div>
 
           <div className="rounded-2xl bg-[#fafafa] p-5 shadow-[0_0_0_1px_rgba(0,0,0,0.06)]">
-            <span className="text-[12px] font-semibold tracking-wide text-neutral-900/40">
+            <span className="text-[12px] font-semibold tracking-wide text-[#667085]">
               {t('finesOut')}
             </span>
-            <p className="mt-2 font-display text-3xl font-extrabold tabular-nums leading-none text-neutral-900">
-              {fmt(finesGel)}
+            <p className="mt-2 flex min-w-0 flex-wrap items-baseline gap-1.5 font-display text-3xl font-extrabold tabular-nums leading-none text-neutral-900">
+              <span className="inline-block min-w-[7ch] text-right">{fmt(finesGel)}</span>
               <span className="ml-1.5 text-base font-bold text-[#737373]">{t('perMonth')}</span>
             </p>
           </div>
@@ -158,21 +164,18 @@ export function OfficeLeak() {
             className="rounded-2xl p-6 md:p-7"
             style={{ background: 'color-mix(in srgb, var(--brand) 14%, white)' }}
           >
-            <span className="text-[12px] font-semibold tracking-wide text-neutral-900/50">
+            <span className="text-[12px] font-semibold tracking-wide text-[#4B5563]">
               {t('total')}
             </span>
-            <p className="mt-3 font-display text-5xl font-extrabold tabular-nums leading-none text-neutral-900 md:text-6xl">
-              {fmt(total)}
-              <span className="ml-2 text-2xl font-bold text-neutral-900/50">{t('perMonth')}</span>
+            <p className="mt-3 flex min-w-0 flex-wrap items-baseline gap-2 font-display text-5xl font-extrabold tabular-nums leading-none text-neutral-900 md:text-6xl">
+              <span className="inline-block min-w-[7ch] text-right">{fmt(total)}</span>
+              <span className="ml-2 text-2xl font-bold text-[#4B5563]">{t('perMonth')}</span>
             </p>
           </div>
 
           <p
-            className={
-              small
-                ? 'text-pretty text-[13px] font-semibold leading-relaxed text-neutral-900'
-                : 'text-pretty text-[12px] leading-relaxed text-[#737373]'
-            }
+            data-demo-outcome
+            className="min-h-[42px] text-pretty text-[13px] font-semibold leading-relaxed text-neutral-900"
           >
             {t('note')}
           </p>
@@ -200,10 +203,10 @@ function Range({
   suffix?: string;
 }) {
   return (
-    <label className="block">
-      <span className="flex items-baseline justify-between gap-3">
-        <span className="text-[13px] leading-snug text-neutral-900/70">{label}</span>
-        <span className="whitespace-nowrap font-display text-[15px] font-extrabold tabular-nums text-[var(--brand)]">
+    <label className="block min-w-0">
+      <span className="flex min-h-[40px] min-w-0 items-start justify-between gap-3">
+        <span className="min-w-0 break-words text-[13px] leading-snug text-neutral-900/70">{label}</span>
+        <span className="min-w-[112px] shrink-0 whitespace-nowrap text-right font-display text-[15px] font-extrabold tabular-nums text-[var(--brand-cta)]">
           {value}
           {suffix}
         </span>
@@ -215,7 +218,7 @@ function Range({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="mt-2.5 h-10 w-full cursor-pointer appearance-none bg-transparent focus-visible:outline-none [&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-[#e5e5e5] [&::-webkit-slider-thumb]:mt-[-7px] [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[var(--brand)] [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:duration-150 [&::-webkit-slider-thumb]:ease-out active:[&::-webkit-slider-thumb]:scale-[0.96] [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-[var(--brand)] [&::-moz-range-track]:h-1.5 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-[#e5e5e5]"
+        className="mt-2.5 h-11 w-full cursor-pointer appearance-none rounded-lg bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2 [&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-[#e5e5e5] [&::-webkit-slider-thumb]:mt-[-7px] [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[var(--brand-cta)] [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:duration-150 [&::-webkit-slider-thumb]:ease-out active:[&::-webkit-slider-thumb]:scale-[0.96] [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-[var(--brand-cta)] [&::-moz-range-track]:h-1.5 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-[#e5e5e5]"
       />
     </label>
   );

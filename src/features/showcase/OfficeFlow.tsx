@@ -64,17 +64,23 @@ export function OfficeFlow() {
   const activeFrame = flowFrame(stage);
 
   return (
-    <SectionContainer className="py-20 md:py-28">
-      <div ref={visibilityRef}>
+    <SectionContainer className="py-16 md:py-24 lg:py-28">
+      <div
+        ref={visibilityRef}
+        data-landing-demo="office-flow"
+        data-demo-id="office-flow"
+        data-demo-detail={stage}
+        aria-live="off"
+      >
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div className="max-w-3xl">
-            <span className="text-[12px] font-semibold tracking-wide text-neutral-900/45">
+            <span className="text-[12px] font-semibold tracking-wide text-[#667085]">
               {t('eyebrow')}
             </span>
-            <h2 className="mt-4 text-balance font-display text-3xl font-extrabold leading-[1.1] tracking-tight text-neutral-900 md:text-4xl">
+            <h2 className="mt-4 text-balance font-display text-[30px] font-extrabold leading-[1.1] tracking-tight text-[#101828] md:text-[36px] md:leading-[1.12]">
               {t('heading')}
             </h2>
-            <p className="mt-3 max-w-2xl text-pretty text-[15px] leading-relaxed text-[#525252]">
+            <p className="mt-3 max-w-2xl text-pretty text-[15px] leading-relaxed text-[#4B5563]">
               {t('subtitle')}
             </p>
           </div>
@@ -82,7 +88,8 @@ export function OfficeFlow() {
           <button
             type="button"
             onClick={() => controllerRef.current?.replay()}
-            className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-neutral-900 px-5 text-[14px] font-bold text-white transition-transform active:scale-[0.97] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2"
+            data-demo-replay
+            className="inline-flex min-h-12 max-w-full shrink-0 items-center justify-center gap-2 rounded-xl bg-neutral-900 px-5 text-center text-[14px] font-bold text-white transition-transform active:scale-[0.96] motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)] focus-visible:ring-offset-2"
           >
             <Ico name="solar:refresh-bold-duotone" className="h-5 w-5" />
             {activeFrame.approved ? t('again') : t('running')}
@@ -91,7 +98,7 @@ export function OfficeFlow() {
 
         <div className="mt-10 overflow-hidden rounded-3xl bg-[#f7f7f8] shadow-[0_0_0_1px_rgba(0,0,0,0.07),0_28px_70px_-48px_rgba(0,0,0,0.38)]">
           <div className="flex min-w-0 items-start gap-3 bg-[#0e0e11] p-4 text-white sm:items-center sm:p-5">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand)]">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--brand-cta)]">
               <Ico name="solar:chat-round-dots-bold-duotone" className="h-5 w-5" />
             </span>
             <div className="min-w-0 flex-1">
@@ -112,7 +119,7 @@ export function OfficeFlow() {
           </div>
 
           <div className="p-3 sm:p-5 lg:p-6">
-            <ol className="grid grid-cols-1 gap-3 lg:grid-cols-5" aria-live="polite">
+            <ol className="grid grid-cols-1 gap-3 lg:grid-cols-5" aria-live="off">
               {OFFICE_FLOW_STAGES.map((item, index) => {
                 const frame = flowFrame(item);
                 const reached = index <= activeIndex;
@@ -125,18 +132,19 @@ export function OfficeFlow() {
                     key={item}
                     aria-current={current ? 'step' : undefined}
                     initial={false}
-                    animate={{ opacity: reached ? 1 : 0.48, y: 0 }}
+                    animate={{ y: 0 }}
                     transition={{ duration: reduced ? 0 : 0.24, ease: [0.23, 1, 0.32, 1] }}
                     className={cn(
                       'relative min-w-0 rounded-2xl bg-white p-4 shadow-[0_0_0_1px_rgba(0,0,0,0.07)]',
+                      !reached && 'bg-[#fafafa] shadow-[0_0_0_1px_rgba(0,0,0,0.05)]',
                       isApproval && reached && 'bg-[#fffaf0] shadow-[0_0_0_1px_rgba(217,119,6,0.55)]',
                       isReady && 'bg-[#f0fdf8] shadow-[0_0_0_1px_rgba(13,148,136,0.5)]',
                     )}
                   >
                     <span
                       className={cn(
-                        'flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-900/6 text-neutral-900/35',
-                        reached && !isApproval && !isReady && 'bg-[var(--brand)] text-white',
+                        'flex h-12 w-12 items-center justify-center rounded-xl bg-neutral-900/6 text-[#667085]',
+                        reached && !isApproval && !isReady && 'bg-[var(--brand-cta)] text-white',
                         isApproval && reached && 'bg-[#d97706] text-white',
                         isReady && 'bg-[#0d9488] text-white',
                       )}
@@ -175,7 +183,7 @@ export function OfficeFlow() {
               <div className="flex min-w-0 items-start gap-3 rounded-xl bg-white p-3 text-neutral-900">
                 <Ico name="solar:bolt-bold-duotone" className="mt-0.5 h-5 w-5 shrink-0 text-[var(--brand)]" />
                 <div className="min-w-0">
-                  <span className="block text-[11px] font-semibold text-neutral-900/50">{t('auto')}</span>
+                  <span className="block text-[11px] font-semibold text-[#667085]">{t('auto')}</span>
                   <span className="mt-1 block text-pretty text-[13px] font-semibold leading-snug">
                     {t('autoTime')}
                   </span>
@@ -185,7 +193,7 @@ export function OfficeFlow() {
           </div>
         </div>
 
-        <p className="mt-4 max-w-3xl text-pretty text-[12.5px] leading-relaxed text-[#737373]">
+        <p data-demo-outcome className="mt-4 max-w-3xl text-pretty text-[12.5px] leading-relaxed text-[#4B5563]">
           {t('note')}
         </p>
       </div>

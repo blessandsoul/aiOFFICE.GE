@@ -1,35 +1,35 @@
 'use client';
 
-import { OfficeFlow } from '@/features/showcase/OfficeFlow';
-import { OfficeExceptionGuard } from '@/features/showcase/OfficeExceptionGuard';
-import { OfficeLeak } from '@/features/showcase/OfficeLeak';
-import { OfficeReconciliationGuard } from '@/features/showcase/OfficeReconciliationGuard';
-import { OfficeMap } from '@/features/showcase/OfficeMap';
+import { useTranslations } from 'next-intl';
 
-/* =========================================================================
-   LandingShowcase: the aiOFFICE product slot.
+import { ProductCapabilities } from './ProductCapabilities';
 
-   Five sections, and the order is the argument:
+const CAPABILITY_ICONS = [
+  'solar:chat-round-dots-bold-duotone',
+  'solar:shield-check-bold-duotone',
+  'solar:clock-circle-bold-duotone',
+  'solar:check-circle-bold-duotone',
+  'solar:settings-bold-duotone',
+] as const;
 
-     1. Watch an order run itself. The signature. A Viber message at 23:40 on a Friday
-        becomes an order, a waybill, an invoice, and a confirmation, and a human stops it
-        once, visibly, at the step that touches money. Nobody has to read anything.
-     2. Show the exception guard holding an uncertain quantity until a human corrects it.
-     3. What is the paperwork actually costing you. His inputs, his money, and NOT saved
-        hours, because a Georgian hour is worth 14 GEL and the American calculator lies here.
-     4. Reconcile the four records and block dispatch until they match.
-     5. Pick your business, see what we would automate first, ranked by what moves money in
-        this country rather than by what demos well.
-   ========================================================================= */
+export function LandingShowcase(): React.ReactElement {
+  const t = useTranslations('product.capabilities');
 
-export function LandingShowcase() {
   return (
-    <div id="showcase" className="landing-showcase">
-      <OfficeFlow />
-      <OfficeExceptionGuard />
-      <OfficeLeak />
-      <OfficeReconciliationGuard />
-      <OfficeMap />
-    </div>
+    <ProductCapabilities
+      eyebrow={t('eyebrow')}
+      title={t('title')}
+      intro={t('intro')}
+      outcomeLabel={t('outcomeLabel')}
+      items={CAPABILITY_ICONS.map((icon, index) => {
+        const item = String(index + 1);
+        return {
+          icon,
+          title: t(`items.${item}.title`),
+          description: t(`items.${item}.description`),
+          result: t(`items.${item}.result`),
+        };
+      })}
+    />
   );
 }
