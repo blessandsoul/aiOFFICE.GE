@@ -33,11 +33,6 @@ export const SITE = {
    * `defaultLocale` is the UNPREFIXED locale (next-intl `localePrefix: "as-needed"`), so it
    * decides the URL shape: the default lives at `/`, the others at `/<locale>`. The Georgian
    * landings use "ka"; the export landings (aiapp, vibecoding) use "en".
-   *
-   * It is NOT the same question as "is this locale Georgian". That stays a literal
-   * `locale === "ka"` check wherever it appears, because it drives the Georgian font and the OG
-   * locale tag, and Georgian is still an offered locale even on an EN-default site. Do not
-   * find-replace one for the other.
    */
   defaultLocale: "ka",
   locales: ["ka", "en", "ru"],
@@ -46,7 +41,7 @@ export const SITE = {
   manifest: {
     name: "aiOFFICE",
     short: "aiOFFICE",
-    description: "An AI office assistant for tasks, email, documents, approvals, reminders, and reports.",
+    description: "Company private AI model and central knowledge bank for employee onboarding, internal policies, and CRM workflows.",
     background: "#fbfcfc",
     theme: "#0d9488",
   },
@@ -65,42 +60,43 @@ export const SITE = {
    */
   seo: {
     disambiguating:
-      "An AI office assistant for Georgian companies that organizes tasks, email, documents, approvals, reminders, meeting follow-ups and reports. It is not an accounting product and it is not a customer-facing chatbot.",
-    serviceType: "AI office assistant and internal workflow automation for Georgian companies",
+      "A private company AI model and central knowledge bank for Georgian businesses that indexes internal regulations, contracts, invoices, and workflows, answers employee questions in Telegram, Slack, and CRM with exact document page citations, and automates employee onboarding. It is not an accounting ERP and it is not a public customer chatbot.",
+    serviceType: "Company Private AI Model & Central Knowledge Bank for Georgian Businesses",
     audienceName:
-      "Georgian companies in distribution, retail, logistics, healthcare, construction and hospitality",
+      "Georgian companies in distribution, retail, logistics, healthcare, construction, finance and hospitality",
     areaServed: "GE",
     knowsAbout: [
-      "Business process automation",
-      "Task management",
-      "Email triage",
-      "Document organization",
-      "Approval workflows",
-      "Meeting follow-up",
-      "Deadline reminders",
-      "Office reporting",
-      "Internal knowledge search",
+      "Company private AI model",
+      "Corporate knowledge bank",
+      "Employee onboarding automation",
+      "Document citation and search",
+      "Internal policy Q&A",
+      "Telegram & Slack AI assistant",
+      "CRM workflow automation",
+      "24/7 Knowledge synchronization",
+      "Isolated enterprise data security",
     ],
     features: [
-      "Tasks collected from email, chat and forms into one queue",
-      "Automatic owners, deadlines and reminders based on approved rules",
-      "Meeting notes converted into assigned follow-up tasks",
-      "Documents organized with the current version and approval status visible",
-      "Daily and weekly summaries prepared from real office activity",
+      "Private AI model trained on your company's documents, contracts, and regulations",
+      "Instant answers in Telegram, Slack, WhatsApp and CRM in 0.28 seconds",
+      "Exact document citations with file name, page, and line number",
+      "Instant zero-day employee onboarding without distracting managers",
+      "24/7 continuous automatic synchronization with new corporate files",
+      "100% isolated enterprise data security with zero external training leakage",
     ],
     boundary:
-      "aiOFFICE organizes work inside the company. Turning source documents into accounting records belongs to aiDOCS.ge. Customer chat belongs to aiSTAFF.ge, phone calls to aiCALL.ge, and mobile app creation to aiAPP.ge.",
+      "aiOFFICE organizes internal company knowledge, onboarding, and workflow rules. Processing accounting documents and 1C/ORIS postings belongs to aiDOCS.ge. External customer-facing chat belongs to aiSTAFF.ge, automated phone calls to aiCALL.ge, and web apps to aiAPP.ge.",
     limits: [
-      "The business case is measured on the client's own missed tasks, response time, overdue approvals and manual reporting effort. aiNOW does not reuse savings figures from another company.",
-      "aiNOW does not promise headcount reduction.",
-      "aiOFFICE is not an accounting system and does not submit tax documents.",
-      "Connections to email, calendars, storage and existing business tools are confirmed only after access and compatibility are checked.",
-      "Every result is measured on the client's own process. aiNOW publishes no borrowed benchmark as proof.",
+      "The business case is measured on the client's own onboarding speed, response time to internal questions, and eliminated manager interruptions. aiNOW does not reuse savings figures from another company.",
+      "aiNOW does not promise headcount reduction; aiOFFICE eliminates repetitive routine so teams focus on high-value business.",
+      "aiOFFICE is not an accounting system and does not submit tax documents (that belongs to aiDOCS.ge).",
+      "Connections to Telegram, Slack, CRM, and cloud storage are configured after access and compatibility check.",
+      "Every result is measured on the client's own verified data. aiNOW publishes no borrowed benchmark as proof.",
     ],
     commitment:
-      "Before work starts, aiNOW writes down the office routine, owners, deadlines, approval boundary and the business result that will be measured.",
+      "Before work starts, aiNOW indexes the company's internal documents, builds the private AI model, connects it to your communication channels, and verifies citation accuracy.",
     summary:
-      "aiOFFICE is an AI office assistant for Georgian companies. It gathers tasks from the channels the team already uses, assigns owners and deadlines, organizes documents and approvals, follows up after meetings, and prepares clear status reports while people keep control of important decisions.",
+      "aiOFFICE is a private company AI model and knowledge bank for Georgian businesses. It indexes internal regulations, contracts, and CRM processes, providing instant answers with exact page citations in Telegram, Slack, and CRM to onboard new hires and keep leaders focused.",
   },
 } as const;
 

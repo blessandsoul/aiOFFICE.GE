@@ -1,0 +1,518 @@
+/* =========================================================================
+   aiOFFICE Hero Proof — Compact Corporate Chat & Live Citation Engine
+   Interface Polish Engine Token Hierarchy
+   ========================================================================= */
+
+.office-hero-stage {
+  width: 100%;
+  max-width: 520px;
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  box-sizing: border-box;
+}
+
+@media (min-width: 640px) {
+  .office-hero-stage {
+    padding: 14px 16px;
+    gap: 9px;
+  }
+}
+
+/* ── Top Bar: Integrations & Model Sync ── */
+.office-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 7px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  gap: 6px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.chat-header-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #09090b;
+  min-width: 0;
+}
+
+.chat-sync-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 0 2.5px rgba(16, 185, 129, 0.25);
+  flex: none;
+}
+
+.chat-integrations-ticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #f4f4f5;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-family: var(--font-space, monospace);
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #52525b;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+}
+
+.ticker-dot {
+  color: #a1a1aa;
+  font-size: 8px;
+}
+
+/* ── 3-Tab Scenario Switcher ── */
+.office-tabs-dock {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  background: #f4f4f5;
+  padding: 3px;
+  border-radius: 10px;
+  gap: 3px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.office-tab-btn {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5px;
+  padding: 5px 3px;
+  border-radius: 7px;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.15s ease, color 0.15s ease;
+  user-select: none;
+  text-align: center;
+  overflow: hidden;
+}
+
+.office-tab-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.office-tab-btn:active {
+  transform: scale(0.96);
+}
+
+.office-tab-btn.active {
+  background: #09090b;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.tab-num-tag {
+  font-family: var(--font-space, monospace);
+  font-size: 8px;
+  font-weight: 800;
+  color: #7c3aed;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.office-tab-btn.active .tab-num-tag {
+  color: #a78bfa;
+}
+
+.tab-label-text {
+  font-size: 10px;
+  font-weight: 700;
+  color: #3f3f46;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.office-tab-btn.active .tab-label-text {
+  color: #ffffff;
+}
+
+/* ── Live Corporate Chat Feed ── */
+.office-chat-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 1px 0;
+  min-width: 0;
+}
+
+/* 1. User/Employee Bubble */
+.chat-row-user {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.user-avatar-wrap {
+  position: relative;
+  flex: none;
+}
+
+.user-avatar-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid #e4e4e7;
+  display: block;
+}
+
+.user-status-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  border: 1.5px solid #ffffff;
+}
+
+.user-bubble-box {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  border-top-left-radius: 3px;
+  padding: 5px 9px;
+  max-width: 92%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.user-meta-line {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9.5px;
+  flex-wrap: wrap;
+}
+
+.user-name {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.user-badge-tag {
+  background: #e0e7ff;
+  color: #3730a3;
+  font-size: 8px;
+  font-weight: 700;
+  padding: 0.5px 4px;
+  border-radius: 3px;
+}
+
+.user-msg-text {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.35;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* 2. aiOFFICE Core Response Bubble */
+.chat-row-ai {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.ai-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #09090b 0%, #18181b 100%);
+  color: #34d399;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  border: 1.5px solid rgba(52, 211, 153, 0.3);
+}
+
+.ai-bubble-box {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: #ffffff;
+  border: 1.5px solid #86efac;
+  border-radius: 12px;
+  border-top-left-radius: 3px;
+  padding: 7px 11px;
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.06);
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.ai-meta-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.ai-name-wrap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ai-name {
+  font-weight: 800;
+  color: #064e3b;
+}
+
+.ai-badge-tag {
+  background: #d1fae5;
+  color: #065f46;
+  font-size: 8.5px;
+  font-weight: 800;
+  padding: 0.5px 4px;
+  border-radius: 3px;
+}
+
+.ai-meta-right {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.ai-zero-call-tag {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #047857;
+  font-size: 8.5px;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 4px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 2.5px;
+}
+
+.ai-speed-tag {
+  font-family: var(--font-space, monospace);
+  font-size: 9px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #059669;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+/* Steps List */
+.ai-steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.ai-step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.3;
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.step-num-badge {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+  font-size: 8px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  margin-top: 1px;
+}
+
+/* Exact Document Citation Snippet Card */
+.ai-citation-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 6px;
+  padding: 5px 8px;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.citation-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.citation-left-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.citation-file-icon {
+  color: #7c3aed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.citation-title {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #334155;
+  font-family: var(--font-space, monospace);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.citation-exact-loc {
+  font-size: 9px;
+  font-weight: 700;
+  color: #7c3aed;
+  display: inline-flex;
+  align-items: center;
+  gap: 2.5px;
+  white-space: nowrap;
+  flex: none;
+}
+
+.citation-snippet-quote {
+  font-size: 9.5px;
+  color: #475569;
+  line-height: 1.35;
+  background: #ffffff;
+  border-left: 2px solid #7c3aed;
+  padding: 3px 6px;
+  border-radius: 3px;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.snippet-mark {
+  background: #fef08a;
+  color: #854d0e;
+  padding: 0 2px;
+  border-radius: 2px;
+  font-weight: 700;
+}
+
+/* ── Bottom Guarantee Bar: Perpetual Auto-Sync & CRM Integration ── */
+.office-model-bottom-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #09090b;
+  border-radius: 10px;
+  padding: 5px 9px;
+  color: #ffffff;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.model-sync-left {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.model-icon-box {
+  color: #34d399;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.model-text-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.model-text-sub {
+  font-size: 8px;
+  color: #a1a1aa;
+  word-break: break-word;
+}
+
+.model-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 5px;
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 4px;
+  font-family: var(--font-space, monospace);
+  font-size: 8.5px;
+  font-weight: 800;
+  color: #34d399;
+  white-space: nowrap;
+  flex: none;
+}
