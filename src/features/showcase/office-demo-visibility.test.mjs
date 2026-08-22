@@ -194,18 +194,12 @@ test('all office stories use the shared visible loop and expose replay', () => {
     assert.doesNotMatch(source, /createVisibilityGate|setInterval/u);
   }
 
-  const heroAdapter = readFileSync(new URL('HeroProof.tsx', import.meta.url), 'utf8');
-  const heroWorkflow = readFileSync(
-    new URL('../home/components/HeroWorkflowStory.tsx', import.meta.url),
-    'utf8',
-  );
-  assert.match(heroAdapter, /HeroWorkflowStory/u);
-  assert.match(heroAdapter, /mode="orchestrated"/u);
-  assert.match(heroWorkflow, /createDemoLoop/u);
-  assert.match(heroWorkflow, /threshold:\s*0\.35/u);
-  assert.match(heroWorkflow, /holdMs:\s*2_000/u);
-  assert.match(heroWorkflow, /controllerRef\.current\?\.replay\(\)/u);
-  assert.doesNotMatch(heroWorkflow, /createVisibilityGate|setInterval/u);
+  const heroSource = readFileSync(new URL('HeroProof.tsx', import.meta.url), 'utf8');
+  assert.match(heroSource, /createDemoLoop/u);
+  assert.match(heroSource, /threshold:\s*0\.35/u);
+  assert.match(heroSource, /holdMs:\s*2000/u);
+  assert.match(heroSource, /controllerRef\.current\?\.replay\(\)/u);
+  assert.doesNotMatch(heroSource, /createVisibilityGate|setInterval/u);
 });
 
 test('all office stories use bundled icons instead of raw visitor status glyphs', () => {
@@ -222,15 +216,12 @@ test('all office stories use bundled icons instead of raw visitor status glyphs'
   assert.match(exceptionSource, /import \{ Ico \} from '@\/components\/common\/Ico';/u);
   assert.match(exceptionSource, /<Ico/u);
 
-  const heroAdapter = readFileSync(new URL('HeroProof.tsx', import.meta.url), 'utf8');
-  const heroWorkflow = readFileSync(
-    new URL('../home/components/HeroWorkflowStory.tsx', import.meta.url),
-    'utf8',
-  );
-  assert.match(heroAdapter, /solar:settings-bold-duotone/u);
-  assert.match(heroWorkflow, /import \{ Ico \} from '@\/components\/common\/Ico';/u);
-  assert.doesNotMatch(`${heroAdapter}\n${heroWorkflow}`, RAW_STATUS_GLYPH);
-  assert.doesNotMatch(`${heroAdapter}\n${heroWorkflow}`, /from ['"]lucide-react['"]/u);
+  const heroSource = readFileSync(new URL('HeroProof.tsx', import.meta.url), 'utf8');
+  assert.match(heroSource, /import \{ Ico \} from '@\/components\/common\/Ico';/u);
+  assert.match(heroSource, /<Ico/u);
+  assert.doesNotMatch(heroSource, /<svg/u);
+  assert.doesNotMatch(heroSource, RAW_STATUS_GLYPH);
+  assert.doesNotMatch(heroSource, /from ['"]lucide-react['"]/u);
 });
 
 test('manual leak and map stories yield until an enabled explicit replay', () => {

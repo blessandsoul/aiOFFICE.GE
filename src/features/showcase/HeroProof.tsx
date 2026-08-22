@@ -1,7 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 
+import { Ico } from '@/components/common/Ico';
 import { createDemoLoop } from '@/features/home/components/lib/demo-loop.mjs';
 import './office-hero-proof.css';
 
@@ -166,15 +168,15 @@ export function HeroProof(): React.ReactElement {
       <div className="office-chat-header">
         <div className="chat-header-title">
           <span className="chat-sync-pulse" />
-          <span>თქვენი კომპანიის AI მოდელი</span>
+          <span>თქვენი კომპანიის ცოდნის ასისტენტი</span>
         </div>
         <div className="chat-integrations-ticker">
           <span className="ticker-item">Telegram</span>
-          <span className="ticker-dot">•</span>
+          <span className="ticker-dot" aria-hidden="true" />
           <span className="ticker-item">Slack</span>
-          <span className="ticker-dot">•</span>
+          <span className="ticker-dot" aria-hidden="true" />
           <span className="ticker-item">CRM</span>
-          <span className="ticker-dot">•</span>
+          <span className="ticker-dot" aria-hidden="true" />
           <span className="ticker-item">WhatsApp</span>
         </div>
       </div>
@@ -202,13 +204,14 @@ export function HeroProof(): React.ReactElement {
         {/* 1. Message by Employee / New Hire with Photo Avatar */}
         <div className="chat-row-user">
           <div className="user-avatar-wrap">
-            <img
+            <Image
               src={current.employeeAvatar}
               alt={current.employeeName}
               className="user-avatar-img"
               width={28}
               height={28}
-              loading="eager"
+              sizes="28px"
+              priority
             />
             <span className="user-status-dot" aria-hidden="true" />
           </div>
@@ -224,27 +227,21 @@ export function HeroProof(): React.ReactElement {
         {/* 2. Instant Response by aiOFFICE Core */}
         <div className="chat-row-ai">
           <div className="ai-avatar">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-            </svg>
+            <Ico name="solar:bolt-bold-duotone" />
           </div>
           <div className="ai-bubble-box">
             <div className="ai-meta-line">
               <div className="ai-name-wrap">
                 <span className="ai-name">aiOFFICE</span>
-                <span className="ai-badge-tag">კომპანიის AI მოდელი</span>
+                <span className="ai-badge-tag">ცოდნის ასისტენტი</span>
               </div>
               <div className="ai-meta-right">
                 <span className="ai-zero-call-tag">
-                  <svg width="9.5" height="9.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
+                  <Ico name="solar:check-circle-bold-duotone" />
                   <span>0 ზარი დირექტორს</span>
                 </span>
                 <span className="ai-speed-tag">
-                  <svg width="9.5" height="9.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-                  </svg>
+                  <Ico name="solar:bolt-bold-duotone" />
                   <span>0.28 წმ</span>
                 </span>
               </div>
@@ -265,16 +262,12 @@ export function HeroProof(): React.ReactElement {
               <div className="citation-header-row">
                 <div className="citation-left-wrap">
                   <div className="citation-file-icon">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
-                    </svg>
+                    <Ico name="solar:document-text-bold-duotone" />
                   </div>
                   <span className="citation-title">{current.docName}</span>
                 </div>
                 <span className="citation-exact-loc">
-                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
+                  <Ico name="solar:check-circle-bold-duotone" />
                   <span>{current.docCitation}</span>
                 </span>
               </div>
@@ -296,19 +289,15 @@ export function HeroProof(): React.ReactElement {
       <div className="office-model-bottom-bar">
         <div className="model-sync-left">
           <div className="model-icon-box">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            </svg>
+            <Ico name="solar:shield-check-bold-duotone" />
           </div>
           <div>
-            <div className="model-text-title">ერთხელ იქმნება • მუდმივად ახლდება</div>
+            <div className="model-text-title">ერთხელ ერთდება, შემდეგ განახლებადია</div>
             <div className="model-text-sub">ინტეგრაცია CRM-ში, Telegram-სა და ნებისმიერ ჩატში</div>
           </div>
         </div>
         <div className="model-status-pill">
-          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
+          <Ico name="solar:check-circle-bold-duotone" />
           <span>24/7 SYNC</span>
         </div>
       </div>

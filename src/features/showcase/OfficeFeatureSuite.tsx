@@ -551,7 +551,7 @@ export function OfficeFeatureSuite(): React.ReactElement {
         'Complete data isolation and enterprise-grade security',
       ],
       s8Eyebrow: 'Security',
-      s8Title: '100% isolated enterprise data vault',
+      s8Title: 'Controlled access to company knowledge',
       s8Desc: 'Your company proprietary data and trade secrets remain strictly protected.',
       secCards: [
         {

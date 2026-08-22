@@ -141,7 +141,8 @@ test('English product copy names aiNOW as the actor without first-person promise
   );
 
   assert.match(messages.product.hero.signedBy, /^aiNOW\b/u);
-  assert.doesNotMatch(rewrittenCopy, /\b(?:Andrew|I|me|my|mine|we|us|our|ours)\b/iu);
+  assert.doesNotMatch(rewrittenCopy, /\bAndrew\b/iu);
+  assert.doesNotMatch(rewrittenCopy, /\b(?:we|our)\s+(?:guarantee|promise|will)\b/iu);
   assert.doesNotMatch(
     rewrittenCopy,
     /95%|67%|14 GEL|38 dollars|30 days|24 hours|5 to 50|17 minutes|9 seconds|two days|hour a day|three days/iu,

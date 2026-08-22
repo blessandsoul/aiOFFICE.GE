@@ -66,7 +66,7 @@ export const SITE = {
       "Georgian companies in distribution, retail, logistics, healthcare, construction, finance and hospitality",
     areaServed: "GE",
     knowsAbout: [
-      "Company private AI model",
+      "Company knowledge assistant",
       "Corporate knowledge bank",
       "Employee onboarding automation",
       "Document citation and search",
@@ -74,15 +74,15 @@ export const SITE = {
       "Telegram & Slack AI assistant",
       "CRM workflow automation",
       "24/7 Knowledge synchronization",
-      "Isolated enterprise data security",
+      "Access controls configured for the agreed scope",
     ],
     features: [
-      "Private AI model trained on your company's documents, contracts, and regulations",
+      "A company knowledge assistant configured from the documents and rules you approve",
       "Instant answers in Telegram, Slack, WhatsApp and CRM in 0.28 seconds",
       "Exact document citations with file name, page, and line number",
       "Instant zero-day employee onboarding without distracting managers",
       "24/7 continuous automatic synchronization with new corporate files",
-      "100% isolated enterprise data security with zero external training leakage",
+      "Access, retention, and external-processing conditions are agreed before launch",
     ],
     boundary:
       "aiOFFICE organizes internal company knowledge, onboarding, and workflow rules. Processing accounting documents and 1C/ORIS postings belongs to aiDOCS.ge. External customer-facing chat belongs to aiSTAFF.ge, automated phone calls to aiCALL.ge, and web apps to aiAPP.ge.",
@@ -94,9 +94,9 @@ export const SITE = {
       "Every result is measured on the client's own verified data. aiNOW publishes no borrowed benchmark as proof.",
     ],
     commitment:
-      "Before work starts, aiNOW indexes the company's internal documents, builds the private AI model, connects it to your communication channels, and verifies citation accuracy.",
+      "Before work starts, aiNOW agrees the allowed source material, connects the required channels, and tests answers against approved examples.",
     summary:
-      "aiOFFICE is a private company AI model and knowledge bank for Georgian businesses. It indexes internal regulations, contracts, and CRM processes, providing instant answers with exact page citations in Telegram, Slack, and CRM to onboard new hires and keep leaders focused.",
+      "aiOFFICE is a company knowledge assistant for Georgian businesses. It organizes approved internal rules, documents, and CRM processes so teams can find grounded answers in connected work channels.",
   },
 } as const;
 
