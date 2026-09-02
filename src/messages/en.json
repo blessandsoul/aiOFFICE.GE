@@ -64,12 +64,12 @@
   },
   "product": {
     "seo": {
-      "title": "aiOFFICE: Private Company AI Model & Central Knowledge Bank",
-      "description": "aiOFFICE indexes company policies, contracts, and CRM workflows, giving employees instant answers with exact document citations in team chats."
+      "title": "aiOFFICE: AI assistant for employees",
+      "description": "aiOFFICE is an internal AI assistant for employees. It indexes company policies, contracts, and workflows and prepares answers from approved sources."
     },
     "hero": {
       "owner": "Your Company's",
-      "role": "Company Knowledge Assistant",
+      "role": "assistant for employees",
       "lead": "knows by heart",
       "taglinePrefix": "AI that",
       "taglineWorks": "keeps the office moving",
@@ -79,7 +79,7 @@
       "ctaCall": "Discuss Your Knowledge Base",
       "commitment": "aiNOW configures a company knowledge assistant around your approved sources, connects it to team chats, and agrees access and update rules before launch.",
       "audience": "For teams losing hours on repetitive questions, document searches, and manual employee onboarding.",
-      "sub": "aiOFFICE indexes all company policies, integrates directly into Telegram, Slack, and your CRM, providing instant verified answers in 0.28 seconds with exact page citations.",
+      "sub": "aiOFFICE is an AI assistant for employees. It indexes your business rules and documents, connects to work chats and your CRM, and prepares answers from approved sources.",
       "signedBy": "aiNOW agrees access, retention and any external processing before launch."
     },
     "work": {
