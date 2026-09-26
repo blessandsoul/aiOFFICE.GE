@@ -26,6 +26,7 @@ export function BlogArticle({
 }) {
   const copy = getBlogCopy(post.locale);
   const headings = extractHeadings(post.content);
+  const hasCustomCover = post.coverImage.startsWith('/images/blog/');
 
   return (
     <article className="product-article" data-blog-article="true">
@@ -47,14 +48,21 @@ export function BlogArticle({
         </div>
       </header>
 
-      <div className="article-cover" data-family-shell="true" aria-hidden="true">
-        <div className="article-cover-grid" />
-        <div className="wordmark-3d article-cover-mark">
-          <span className="wm-prefix">{SITE.wordmark.prefix}</span>
-          <span className="wm-mark">{SITE.wordmark.mark}</span>
-          <span className="wm-accent" />
-        </div>
-        <Ico name="solar:document-text-bold-duotone" />
+      <div
+        className={hasCustomCover ? 'article-cover article-cover--photo' : 'article-cover'}
+        data-family-shell="true"
+        aria-hidden="true"
+        style={hasCustomCover ? { backgroundImage: `url("${post.coverImage}")` } : undefined}
+      >
+        {!hasCustomCover ? <>
+          <div className="article-cover-grid" />
+          <div className="wordmark-3d article-cover-mark">
+            <span className="wm-prefix">{SITE.wordmark.prefix}</span>
+            <span className="wm-mark">{SITE.wordmark.mark}</span>
+            <span className="wm-accent" />
+          </div>
+          <Ico name="solar:document-text-bold-duotone" />
+        </> : null}
       </div>
 
       <div className="article-layout" data-family-shell="true">

@@ -33,7 +33,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = getPost(slug, locale);
   if (!post) return { title: 'Not found', robots: { index: false, follow: false } };
   const canonical = localeUrl(locale, `/blog/${slug}`);
-  const ogImage = localeUrl(locale, `/blog/${slug}/opengraph-image`);
+  const hasCustomCover = post.coverImage.startsWith('/images/blog/');
+  const ogImage = hasCustomCover
+    ? `https://${SITE.domain}${post.coverImage}`
+    : localeUrl(locale, `/blog/${slug}/opengraph-image`);
   return {
     title: post.title,
     description: post.excerpt,
@@ -50,7 +53,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       modifiedTime: post.updated,
       authors: [post.author.name],
       tags: post.tags,
-      images: [{ url: ogImage, width: 1200, height: 630, alt: post.title }],
+      images: [{ url: ogImage, ...(hasCustomCover ? {} : { width: 1200, height: 630 }), alt: post.title }],
     },
     twitter: { card: 'summary_large_image', title: post.title, description: post.excerpt, images: [ogImage] },
   };

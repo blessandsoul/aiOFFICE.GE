@@ -263,6 +263,12 @@
     linear-gradient(135deg, #fff 0%, color-mix(in srgb, var(--brand) 9%, #fff) 100%);
 }
 
+.article-cover--photo {
+  height: clamp(200px, 56vw, 560px);
+  background-position: center;
+  background-size: cover;
+}
+
 .article-cover-grid {
   position: absolute;
   inset: 0;
